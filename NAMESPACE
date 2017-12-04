@@ -1,0 +1,25 @@
+useDynLib(cubing, .registration = TRUE)
+
+export(stickerCube, cubieCube, is.stickerCube, is.cubieCube, as.stickerCube, as.cubieCube,
+  randCube, randMoves, scramble, rotate, slice, rotations,
+  is.solved, is.solvable, parity, "%v%", "%e%", "%c%",
+  getMovesCube, move, invCube, invMoves, rotMoves, mirMoves,
+  cycleEdges, cycleCorners, flipEdges, twistCorners,
+  animate, solver, getStickerCube, getCubieCube)
+
+S3method(print, stickerCube)
+S3method(print, cubieCube)
+S3method(plot, cube)
+S3method(plot3d, cube)
+S3method(plot, rotCubes)
+S3method(plot, seqCubes)
+S3method("==", cube)
+S3method(all.equal, cube)
+
+importFrom("rgl", "cube3d", "open3d", "par3d", "bbox3d", "bg3d", "rgl.snapshot", "shapelist3d",
+  "scale3d", "translate3d", "rotate3d", "shade3d", "rgl.ids", "rotationMatrix", "rgl.pop", "plot3d")
+
+importFrom("grDevices", "grey", "rgb")
+importFrom("graphics", "par", "plot", "rect", "segments", "text")
+importFrom("utils", "flush.console")
+importFrom("stats", "runif")

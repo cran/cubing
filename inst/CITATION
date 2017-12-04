@@ -1,0 +1,13 @@
+citHeader("To cite the cubing package please use:")
+
+citEntry(entry="Manual",
+ title = "An Introduction to the Cubing Package",
+ author = "A. G. Stephenson",
+ year = 2017,
+ url = "https://CRAN.R-project.org/package=cubing",
+ textVersion = "Stephenson, A. G. (2017). An Introduction to the Cubing Package. 
+ URL: https://CRAN.R-project.org/package=cubing."
+)
+
+citFooter("Good job. Have a great day.")
+
