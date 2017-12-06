@@ -49,7 +49,7 @@ solver <- function(aCube, tCube, type = c("KB", "ZT", "TF"),
     outst <- character(0)
     if(!is.null(collapse)) outst <- ""
     covec <- aCube$co
-    if(!inv) covec <- -covec %% 3
+    if(!inv) covec <- -covec %% 3L
     attr(outst, "twist") <- covec
     return(outst)
   }
@@ -57,7 +57,7 @@ solver <- function(aCube, tCube, type = c("KB", "ZT", "TF"),
     outst <- character(0)
     if(!is.null(collapse)) outst <- ""
     covec <- aCube$co; eovec <- aCube$eo
-    if(!inv) covec <- -covec %% 3
+    if(!inv) covec <- -covec %% 3L
     attr(outst, "twist") <- covec
     attr(outst, "flip") <- eovec
     return(outst)
@@ -156,27 +156,27 @@ fridrich <- function(init, maxDepth, verbose)
 
 getTwist <- function(twistv, inv) 
 {
-  twist <- numeric(8)
-  twistv <- twistv - 1
+  twist <- integer(8)
+  twistv <- twistv - 1L
   for(i in 1:7) {
-    twist[i] <- twistv %% 3
-    twistv <- twistv %/% 3
+    twist[i] <- twistv %% 3L
+    twistv <- twistv %/% 3L
   }
-  twist[8] <- -sum(twist[-8]) %% 3
+  twist[8] <- -sum(twist[-8]) %% 3L
   names(twist) <- c("URF", "UFL", "ULB", "UBR", "DFR", "DLF", "DBL", "DRB")
-  if(!inv) twist <- -twist %% 3
+  if(!inv) twist <- -twist %% 3L
   twist
 }
 
 getFlip <- function(flipv)
 {
-  flip <- numeric(12)
-  flipv <- flipv - 1
+  flip <- integer(12)
+  flipv <- flipv - 1L
   for(i in 1:11) {
-    flip[i] <- flipv %% 2
-    flipv <- flipv %/% 2
+    flip[i] <- flipv %% 2L
+    flipv <- flipv %/% 2L
   }
-  flip[12] <- -sum(flip[-12]) %% 2
+  flip[12] <- -sum(flip[-12]) %% 2L
   names(flip) <- c("FR", "FL", "BL", "BR", "UR", "UF", "UL", "UB", "DR", "DF", "DL", "DB")
   flip
 }

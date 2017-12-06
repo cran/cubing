@@ -37,7 +37,7 @@ rotate(aCube, rot)
 \seealso{\code{\link{move}}}
 
 \examples{
-aCube <- getCubieCube("henrysnake")
+aCube <- getCubieCube("HenrysSnake")
 bCube <- slice(rotate(aCube, "z'"), "M2") 
 cCube <- move(aCube, "z'M2")
 identical(bCube, cCube)

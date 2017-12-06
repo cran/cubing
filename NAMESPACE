@@ -5,7 +5,7 @@ export(stickerCube, cubieCube, is.stickerCube, is.cubieCube, as.stickerCube, as.
   is.solved, is.solvable, parity, "%v%", "%e%", "%c%",
   getMovesCube, move, invCube, invMoves, rotMoves, mirMoves,
   cycleEdges, cycleCorners, flipEdges, twistCorners,
-  animate, solver, getStickerCube, getCubieCube)
+  animate, solver, getStickerCube, getCubieCube, getMovesPattern)
 
 S3method(print, stickerCube)
 S3method(print, cubieCube)

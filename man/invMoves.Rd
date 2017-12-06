@@ -49,7 +49,7 @@ mv <- "RB'y'F2MD'"
 invMoves(mv)
 mirMoves(mv, mirror = "RL")
 
-iCube <- getCubieCube("twchickfeet")
+iCube <- getCubieCube("TwistedChickenFeet")
 rmv <- rotMoves(mv, rotation = "x")
 aCube <- move(iCube, c("x", rmv, "x'"))
 bCube <- move(iCube, mv)

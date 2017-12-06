@@ -8,21 +8,26 @@
   Creates, converts and tests for stickerCube objects. 
 }
 \usage{
-getStickerCube(pattern = c("solved", "superflip","checker","easychecker","wire",
-   "tablecloth","spiral","logo","vstripe","ocorners","cross1","cross2","cinc",
-   "cincinc", "anaconda","python","bmamba","gmamba","fourspot","sixspot","twister",
-   "cec","tetris","henryzz","fchecker","exduckfeet","strdotsolved","picnic",
-   "percent","mirror","ochecker","fourp2d","rockets","slash","pillars","twduckfeet",
-   "roncinc","headlights","csnake","tomparks","fourcrosses","edgehex3","edgehex2",
-   "twrings","exrings","twchickfeet","exchickfeet","twpeaks4","twpeaks2","expeaks",
-   "six2one","yinyang", "henrysnake"))
+getStickerCube(pattern = c("Solved","Superflip","EasyCheckerboard","Wire","PlusMinus",
+  "Tablecloth","Spiral","SpeedsolvingLogo","VerticalStripes","OppositeCorners",
+  "Cross","UnionJack","CubeInTheCube","CubeInACubeInACube","Anaconda","Python",
+  "BlackMamba","GreenMamba","FourSpots","SixSpots","Twister","Kilt","Tetris",
+  "DontCrossLine","Hi","HiAllAround","AreYouHigh","CUAround","OrderInChaos","Quote",
+  "MatchingPictures","3T","LooseStrap","ZZLine","Doubler","CheckerZigzag",
+  "ExchangedDuckFeet","StripeDotSolved","Picnic","PercentSign","Mirror",
+  "PlusMinusCheck","FacingCheckerboards","OppositeCheckerboards","4Plus2Dots",
+  "Rockets","Slash","Pillars","TwistedDuckFeet","RonsCubeInACube","Headlights",
+  "CrossingSnake","Cage","4Crosses","Pyraminx","EdgeTriangle","TwistedRings",
+  "ExchangedRings","TwistedChickenFeet","ExchangedChickenFeet","CornerPyramid",
+  "TwistedPeaks","ExchangedPeaks","SixTwoOne","YinYang","YanYing","HenrysSnake",
+  "TwistedCorners","QuickMaths"))
 stickerCube(string)
 as.stickerCube(aCube)
 is.stickerCube(aCube)
 }
 \arguments{
   \item{pattern}{A character string giving a pattern for the returned cube.
-    Approximately fifty different patterns are available. The default pattern
+    Approximately seventy different patterns are available. The default pattern
 	is the solved cube. The patterns and names are derived from the ruwix.com website.}
   \item{string}{A character string representing the color on each cube sticker. The string
     must contain only the letters URFLBD, representing the color on each face, and may contain 
@@ -58,7 +63,7 @@ is.stickerCube(aCube)
   \code{\link{randCube}}, \code{\link{cubieCube}}}
 
 \examples{
-aCube <- getStickerCube("wire")
+aCube <- getStickerCube("Wire")
 bCube <- stickerCube("UUUUUUUUU RLLRRRLLR BBFFFFFBBD DDDDDDDDL RRLLLRRLF FBBBBBFF")
 cCube <- stickerCube("FBBBUFRRB DUUFRUFFB DBRBFDUFLF RDDDLDDLU UFULLLLLR DRRBLURB")
 identical(aCube, bCube)

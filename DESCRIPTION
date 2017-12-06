@@ -1,6 +1,6 @@
 Package: cubing
-Version: 1.0-0
-Date: 2017-12-10
+Version: 1.0-1
+Date: 2017-12-12
 Title: Rubik's Cube Solving
 Author: Alec Stephenson. 
 Maintainer: Alec Stephenson <alec_stephenson@hotmail.com>
@@ -15,6 +15,6 @@ Description: Functions for visualizing, animating, solving and
 		Kociemba solver.
 License: GPL-3
 NeedsCompilation: yes
-Packaged: 2017-12-04 11:15:29 UTC; ste6an
+Packaged: 2017-12-06 11:09:10 UTC; ste6an
 Repository: CRAN
-Date/Publication: 2017-12-04 15:47:44 UTC
+Date/Publication: 2017-12-06 12:56:23 UTC

@@ -45,8 +45,8 @@ aCube \%c\% bCube
   \code{\link{is.solvable}}, \code{\link{move}}}
 
 \examples{
-aCube <- getCubieCube("superflip")
-bCube <- getCubieCube("checker")
+aCube <- getCubieCube("Superflip")
+bCube <- getCubieCube("EasyCheckerboard")
 aCube \%v\% bCube
 }
 \keyword{manip}

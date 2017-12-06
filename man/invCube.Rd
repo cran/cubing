@@ -37,7 +37,7 @@ invCube(aCube, edges = TRUE, corners = TRUE)
   \code{\link{is.solvable}}, \code{\link{solver}}}
 
 \examples{
-aCube <- getCubieCube("tetris")
+aCube <- getCubieCube("Tetris")
 is.solved(aCube \%v\% invCube(aCube))
 is.solved(invCube(aCube) \%v\% aCube)
 

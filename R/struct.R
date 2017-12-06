@@ -11,7 +11,7 @@
 # is.solved is.solvable parity (cyclengths) (psign)
 
 # %v% %e% %c%
-# getMovesCube move plot.seqCubes invCube invMoves rotMoves mirMoves
+# (getSolvedCube) getMovesCube move plot.seqCubes invCube invMoves rotMoves mirMoves
 # cycleEdges cycleCorners flipEdges twistCorners
 
 ###################################################
@@ -147,7 +147,7 @@ as.cubieCube <- function(aCube)
     stop("argument must be a cube object")
   
   n_corner <- 8; n_edge <- 12
-  out <- list(cp = seq(1,n_corner,1), ep = seq(1,n_edge,1), co = rep(0,n_corner), eo = rep(0,n_edge), spor = 1:6)
+  out <- list(cp = 1:n_corner, ep = 1:n_edge, co = rep(0L,n_corner), eo = rep(0L,n_edge), spor = 1:6)
   names(out$cp) <- names(out$co) <- c("URF", "UFL", "ULB", "UBR", "DFR", "DLF", "DBL", "DRB")
   names(out$ep) <- names(out$eo) <- c("FR", "FL", "BL", "BR", "UR", "UF", "UL", "UB", "DR", "DF", "DL", "DB")
   names(out$spor) <- c("U", "R", "F", "D", "L", "B")
@@ -214,8 +214,8 @@ randCube <- function(n = 1, cubie = TRUE, solvable = TRUE, drop = TRUE, spor = 1
     outi <- list(cp = sample(n_corner), ep = sample(n_edge), 
                 co = sample(0:2,n_corner,replace=TRUE), eo = sample(0:1,n_edge,replace=TRUE))
     if(solvable) {
-      outi$co[n_corner] <- -sum(outi$co[-n_corner]) %% 3
-      outi$eo[n_edge] <- -sum(outi$eo[-n_edge]) %% 2
+      outi$co[n_corner] <- -sum(outi$co[-n_corner]) %% 3L
+      outi$eo[n_edge] <- -sum(outi$eo[-n_edge]) %% 2L
       if(psign(outi$cp) != psign(outi$ep)) {
         tmp <- outi$ep[n_edge]
         outi$ep[n_edge] <- outi$ep[n_edge-1]
@@ -393,8 +393,8 @@ is.solvable <- function(aCube, split = FALSE)
   
   cparity <- parity(aCube)
   cparity <- as.logical(cparity["edge"] == cparity["corner"]) 
-  co_ind <- !as.logical(sum(aCube$co) %% 3)
-  eo_ind <- !as.logical(sum(aCube$eo) %% 2)
+  co_ind <- !as.logical(sum(aCube$co) %% 3L)
+  eo_ind <- !as.logical(sum(aCube$eo) %% 2L)
   indvec <- c(parity = cparity, co = co_ind, eo = eo_ind)
   
   if(split) return(indvec)
@@ -449,7 +449,7 @@ psign <- function(p)
   pvec <- aCube$ep; ovec <- aCube$eo
   for(i in 1:n_edge) {
     pvec[i] <- aCube$ep[bCube$ep[i]]
-    ovec[i] <- (aCube$eo[bCube$ep[i]] + bCube$eo[i]) %% 2 
+    ovec[i] <- (aCube$eo[bCube$ep[i]] + bCube$eo[i]) %% 2L 
   }
   aCube$ep <- pvec; aCube$eo <- ovec
   aCube
@@ -461,15 +461,35 @@ psign <- function(p)
   pvec <- aCube$cp; ovec <- aCube$co
   for(i in 1:n_corner) {
     pvec[i] <- aCube$cp[bCube$cp[i]]
-    ovec[i] <- (aCube$co[bCube$cp[i]] + bCube$co[i]) %% 3
+    ovec[i] <- (aCube$co[bCube$cp[i]] + bCube$co[i]) %% 3L
   }
   aCube$cp <- pvec; aCube$co <- ovec
   aCube
 }
 
-# multiple moves cube
+# solved cube and multiple moves cube
 # uses getMoveCube with %v% composition
 
+getSolvedCube <- function(cubie = TRUE)
+{
+  if(!cubie) {
+    n_corner <- 8; n_edge <- 12
+    color <- c("U", "R", "F", "D", "L", "B")
+    sticker <- paste0(rep(color,each=9), rep(1:9,length(color)))
+    out <- rep(color, each = 9)
+    names(out) <- sticker
+    class(out) <- c("stickerCube", "cube")
+  } else {
+    n_corner <- 8; n_edge <- 12
+    out <- list(cp = 1:n_corner, ep = 1:n_edge, co = rep(0L,n_corner), eo = rep(0L,n_edge), spor = 1:6)
+    names(out$cp) <- names(out$co) <- c("URF", "UFL", "ULB", "UBR", "DFR", "DLF", "DBL", "DRB")
+    names(out$ep) <- names(out$eo) <- c("FR", "FL", "BL", "BR", "UR", "UF", "UL", "UB", "DR", "DF", "DL", "DB")
+    names(out$spor) <- c("U", "R", "F", "D", "L", "B")
+    class(out) <- c("cubieCube", "cube")
+  }
+  out
+}
+  
 getMovesCube <- function(moves, cubie = TRUE)
 {
   if(!is.atomic(moves) || !is.character(moves)) 
@@ -486,8 +506,7 @@ getMovesCube <- function(moves, cubie = TRUE)
     stop("only URFDLB face turns allowed")
   
   if(length(moves) == 0) {
-    if(!cubie) return(getStickerCube())
-    return(getCubieCube())
+    return(getSolvedCube(cubie = cubie))
   }
   out <- getMoveCube(moves[1])
   if(length(moves) == 1) {
@@ -497,7 +516,7 @@ getMovesCube <- function(moves, cubie = TRUE)
     return(out)
   }
   for(i in 2:length(moves)) out <- out %v% getMoveCube(moves[i])
-  if(!cubie) out <- as.stickerCube(out)
+  if(!cubie) return(as.stickerCube(out))
   out$spor <- 1:6
   names(out$spor) <- color
   out
@@ -610,7 +629,7 @@ invCube <- function(aCube, edges = TRUE, corners = TRUE)
     for(i in 1:n_corner)
       bCube$cp[aCube$cp[i]] <- i
     for(i in 1:n_corner)
-      bCube$co[i] <- -aCube$co[bCube$cp[i]] %% 3
+      bCube$co[i] <- -aCube$co[bCube$cp[i]] %% 3L
   }
   bCube
 }
@@ -843,7 +862,7 @@ flipEdges <- function(aCube, flip = 1:12)
   if(!is.cubieCube(aCube))
     stop("aCube must be a cubieCube object")
   
-  aCube$eo[flip] <- (aCube$eo[flip] + 1) %% 2
+  aCube$eo[flip] <- (aCube$eo[flip] + 1L) %% 2L
   aCube
 }
 
@@ -867,7 +886,7 @@ twistCorners <- function(aCube, clock = numeric(0), anti = numeric(0))
   if(!is.cubieCube(aCube))
     stop("aCube must be a cubieCube object")
   
-  aCube$co[clock] <- (aCube$co[clock] + 1) %% 3
-  aCube$co[anti] <- (aCube$co[anti] + 2) %% 3
+  aCube$co[clock] <- (aCube$co[clock] + 1L) %% 3L
+  aCube$co[anti] <- (aCube$co[anti] + 2L) %% 3L
   aCube
 }

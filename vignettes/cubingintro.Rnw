@@ -45,6 +45,9 @@ If you use this package, then it would be good to also reference it. To cite thi
 
 To get started we will create a cube. There are two types of cube representations in the package: stickerCubes and cubieCubes. For now, we just use cubieCubes. The function \texttt{getCubieCube} creates a cubieCube with a pretty pattern. You can call the function with no arguments, as in the code below. And don't forget, the \textbf{cubing} package also needs to be loaded with the function \texttt{library} for you to use it. If \texttt{library} does not work, then it probably isn't installed: typing \texttt{install.packages("cubing")} and hitting the return key should do the job.
 
+<<eval=TRUE,echo=FALSE>>=
+options(width=70)
+@
 
 <<eval=TRUE,echo=TRUE,results=hide>>=
 library(cubing)
@@ -52,12 +55,12 @@ hello.cube <- getCubieCube()
 hello.cube
 @
 
-The code creates a cubieCube object called \texttt{hello.cube} and prints it out to the screen. If \texttt{getCubieCube} is used with no arguments, the object is simply the solved cube, which is a pretty pattern, but is not particularly interesting. So instead, we can create some other\footnote{The patterns and their names are taken from the ruwix.com website.} patterns. I'll just use three here, but there are a total of 52 different patterns that you can choose from.
+The code creates a cubieCube object called \texttt{hello.cube} and prints it out to the screen. If \texttt{getCubieCube} is used with no arguments, the object is simply the solved cube, which is a pretty pattern, but is not particularly interesting. So instead, we can create some other\footnote{The patterns and their names are taken from the ruwix.com website.} patterns. I'll just use three here, but there are approximately seventy different patterns that you can choose from.
 
 <<>>=
-aCube <- getCubieCube("superflip")
-bCube <- getCubieCube("easychecker") 
-cCube <- getCubieCube("henrysnake")
+aCube <- getCubieCube("Superflip")
+bCube <- getCubieCube("EasyCheckerboard") 
+cCube <- getCubieCube("HenrysSnake")
 @
 
 There isn't much point creating pretty patterns that you can't see. There are two ways of displaying a cube. The first is the \texttt{plot} function\footnote{The \texttt{plot} and \texttt{plot3d} functions are called generic functions. This means that if you want to read the help files you will need to use \texttt{?plot.cube} and \texttt{?plot3d.cube}.} which creates a flat 2D plot. The second is to use the \texttt{plot3d} function with creates an interactive 3D plot that you can use your mouse to rotate and zoom. For example, the superflip cube in Figure \ref{sflip1} can be displayed using \texttt{plot(aCube)}. For the 3D interactive plot, use \texttt{plot3d(aCube)}.
@@ -87,7 +90,7 @@ getOption("cubing.colors")
 
 The ordering of the faces corresponding to the six colors is U R F D L B, so the first color is the color of the centre sticker on the U face, and the second color is the color of the centre sticker on the R face. Initially (i.e.\ prior to any whole cube rotation) the U face is ghost white and the F face is lime green, corresponding the the WCA (World Cubing Association) scrambling orientation.
 
-You can change the initial scrabling orientation by specifying a different order for the color vector; for example yellow on U and blue on F.
+You can change the initial scrambling orientation by specifying a different order for the color vector; for example yellow on U and blue on F.
 
 <<echo=TRUE>>=
 mycol <- c("yellow", "dodgerblue", "red", 
@@ -151,15 +154,15 @@ rCube <- rCube %v% aCube
 
 Here we generate a random cube \texttt{rCube} and apply the move sequence R U\textquotesingle\  F2 using the cube composition\footnote{For those that know about matrices, the cube composition operator \texttt{\%v\%} works in a similar way to the matrix multiplication operator \texttt{\%*\%}. Both operators are associative but not commutative. The solved state corresponds to the identity matrix, and each cube has a unique inverse given by the \texttt{invCube} function.} operator \texttt{\%v\%}.
 
-So \texttt{getMovesCube} produces a cube representation of a move sequence that can then be applied to any cube. A disadvantage of this approach is that the move sequence cannot include whole cube rotations, because rotations do not work this way. If you want to apply a move sequence that includes rotatations, you will need to use the \texttt{move} function: see Section \ref{subsect:move}.  
+So \texttt{getMovesCube} produces a cube representation of a move sequence that can then be applied to any cube. A disadvantage of this approach is that the move sequence cannot include whole cube rotations, because rotations do not work this way. If you want to apply a move sequence that includes rotations, you will need to use the \texttt{move} function: see Section \ref{subsect:move}.  
 
 \subsection{Creating Even More Pretty Patterns}
 
 Another use of the cube composition operator \texttt{\%v\%} is to create even more pretty patterns by combining the existing pretty patterns.
 
 <<echo=TRUE, eval=FALSE>>=
-aCube <- getCubieCube("anaconda") %v% getCubieCube("fourspot")
-bCube <- getCubieCube("fourspot") %v% getCubieCube("anaconda")
+aCube <- getCubieCube("Anaconda") %v% getCubieCube("FourSpots")
+bCube <- getCubieCube("FourSpots") %v% getCubieCube("Anaconda")
 plot3d(aCube)
 plot3d(bCube)
 @
@@ -197,7 +200,7 @@ plot(getCubieCube(), numbers = TRUE, blank = TRUE)
 The \texttt{cubieCube} function takes a character string (or a character vector) argument. The character string can contain any amount of white space and can only contain the letters U R F D L B which correspond to the colors of the centre stickers on the respective faces. The sticker ordering is given by the scheme in Figure \ref{cubescheme}.  
 
 <<echo=TRUE>>=
-aCube <- getCubieCube("wire")
+aCube <- getCubieCube("Wire")
 bCube <- cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB
                     DDDDDDDDD LRRLLLRRL FFBBBBBFF")
 @
@@ -221,13 +224,24 @@ cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRF FFBBBBBFL")
 cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLBRRL FFBBBLBFF")
 @
 
-<<echo=FALSE,eval=TRUE,results=verbatim>>=
-try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRL FFBBBBBF"), outFile = stdout())
-try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRL FFBBBBBFU"), outFile = stdout())
-try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLBLRRL FFBBLBBFF"), outFile = stdout())
-try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRF FFBBBBBFL"), outFile = stdout())
-try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLBRRL FFBBBLBFF"), outFile = stdout())
-@
+% <<echo=FALSE,eval=TRUE,results=verbatim>>=
+% try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRL FFBBBBBF"), outFile = stdout())
+% try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRL FFBBBBBFU"), outFile = stdout())
+% try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLBLRRL FFBBLBBFF"), outFile = stdout())
+% try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLLRRF FFBBBBBFL"), outFile = stdout())
+% try(cubieCube("UUUUUUUUU RLLRRRLLR BBFFFFFBB DDDDDDDDD LRRLLBRRL FFBBBLBFF"), outFile = stdout())
+% @
+
+% Replacement for above chunk because the outFile argument of try()
+% was only introduced in R 3.4.0.
+
+\begin{verbatim} 
+Error in stickerCube(string) : string of incorrect length
+Error in stickerCube(string) : must have nine of each color URFLBD
+Error in stickerCube(string) : centre pieces are incorrect color
+Error in stickerCube(string) : corner piece has invalid stickers
+Error in stickerCube(string) : edge piece has invalid stickers
+\end{verbatim} 
 
 \section{Cube Representations and Solvability}
 \label{sect:repsolve}
@@ -249,7 +263,7 @@ as.stickerCube(aCube)
 
 A stickerCube object is just a named vector, where the names correspond to the sticker location given in Figure \ref{cubescheme}. The values in the vector are character strings (printed without quotes) representing the colors U R F D L B.
 
-A cubieCube object is a list giving vector\footnote{Although the vectors contain integers, the underlying storage type is floating point.} components for the corner permutation (cp), corner orientation (co), edge permutation (ep) and edge orientation (eo). The names of each vector represent the locations of corners and edges. For orientation, a zero represents a correctly oriented\footnote{We use the most common definition for orientation, so a correctly oriented edge can be solved in <U R F2 D L B2> and a correctly oriented corner can be solved in <U R2 F2 D L2 B2>.} cubie, a one represents a flipped edge or a clockwise twisted corner, and a 2 represents an anti-clockwise twisted corner.
+A cubieCube object is a list giving vector components for the corner permutation (cp), corner orientation (co), edge permutation (ep) and edge orientation (eo). The names within each vector represent the locations of corners and edges. For orientation, a zero represents a correctly oriented\footnote{We use the most common definition for orientation, so a correctly oriented edge can be solved in <U R F2 D L B2> and a correctly oriented corner can be solved in <U R2 F2 D L2 B2>.} cubie, a one represents a flipped edge or a clockwise twisted corner, and a 2 represents an anti-clockwise twisted corner.
 
 A cubieCube object also contains a spor (spatial orientation) vector. This tracks the location of the fixed centre pieces. It is changed only when a whole cube rotation is performed, or when a middle slice (E, M or S) move is performed. The purpose of the spor component is to ensure that the colors used for plotting are consistent before and after rotations. If the component did not exist, then the cube plots would need to be recolored\footnote{The stickerCube representation does not contain spatial orientation information because the U5 value must be U, the R5 value must be R, and so on.} after rotations.
 
@@ -268,7 +282,7 @@ The code line therefore simulates $100$ random cube constructions, and works out
 sum(sapply(randCube(100, solvable = FALSE), is.solvable))
 @
 
-The \texttt{is.solvable} function also has a \texttt{split} argument; if this is \texttt{TRUE}, then it returns a logical value for each of three components: permutation parity\footnote{You can use the function \texttt{parity} to calculate the sign (odd or even) of the corner and edge permutations. Type \texttt{?parity} for more details. For the cube to be solvable the corner and edge permutation signs must be the same (both odd or both even).}, edge orientation and corner orientation. For a cube to be solvable, all three must be \texttt{TRUE}. For the code below, there is a 1 in 2 chance that permuatation parity is \texttt{TRUE}, there is also a 1 in 2 chance that edge orientation is \texttt{TRUE}, and there is a 1 in 3 chance that corner orientation is \texttt{TRUE}.
+The \texttt{is.solvable} function also has a \texttt{split} argument; if this is \texttt{TRUE}, then it returns a logical value for each of three components: permutation parity\footnote{You can use the function \texttt{parity} to calculate the sign (odd or even) of the corner and edge permutations. Type \texttt{?parity} for more details. For the cube to be solvable the corner and edge permutation signs must be the same (both odd or both even).}, edge orientation and corner orientation. For a cube to be solvable, all three must be \texttt{TRUE}. For the code below, there is a 1 in 2 chance that permutation parity is \texttt{TRUE}, there is also a 1 in 2 chance that edge orientation is \texttt{TRUE}, and there is a 1 in 3 chance that corner orientation is \texttt{TRUE}.
 
 <<echo=TRUE>>=
 rCube <- randCube(1, solvable = FALSE)
@@ -278,7 +292,7 @@ is.solvable(rCube, split = TRUE)
 \subsection{Functions Impacting Solvability}
 \label{subsect:impsolve}
 
-There are some functions in the package that can create unsolvable cubes from solvable cubes, and vice-versa. The \texttt{flipEdges} and \texttt{twistCorners} functions allow you to flip any number of edges or twist any number of corners in any direction. The \texttt{cycleEdges} and \texttt{cycleCorners} functions perform permutation cycles on edges or corners. If a $k$-cycle is performed where $k$ is even\footnote{This is because a $k$-cycle can be written as $k-1$ transpositions (swaps, or $2$-cycles), and each transposition changes the permutation sign.}, then a solvable cube will become unsolvable. There also exists operators \texttt{\%e\%} and \texttt{\%c\%} which are similar to \texttt{\%v\%} but act only on the edges and corners respectively. For more information on the impact of these functions, please read the corresponding help files.
+There are some functions in the package that can create unsolvable cubes from solvable cubes, and vice-versa. The \texttt{flipEdges} and \texttt{twistCorners} functions allow you to flip any number of edges or twist any number of corners in any direction. The \texttt{cycleEdges} and \texttt{cycleCorners} functions perform permutation cycles on edges or corners. If a $k$-cycle is performed where $k$ is even\footnote{This is because a $k$-cycle can be written as $k-1$ transpositions (swaps, or $2$-cycles), and each transposition changes the permutation sign.}, then a solvable cube will become unsolvable. There also exists operators \texttt{\%e\%} and \texttt{\%c\%} which are similar to \texttt{\%v\%} but act only on the edges and corners respectively. Both \texttt{A \%e\% B} and \texttt{A \%c\% B} can be unsolvable, even if \texttt{A} and \texttt{B} are solvable.
 
 The \texttt{invCube} function, which calculates the inverse cube state, does not impact solvability, because the inverse of a solvable cube is always solvable, and the inverse of an unsolvable cube is always unsolvable.
 
@@ -394,7 +408,7 @@ animate(aCube, mv, movie = "wrecord")
 
 The movie argument should be a character sting. Here we use \texttt{"wrecord"}. This will save each frame of the animation as a png file. The filename will be e.g.\ \texttt{wrecord0142.png} for frame number $143$. By default, the files\footnote{You can change this using the \texttt{dir} argument. The current working directory is given by \texttt{getwd()}.} will be contained in a the \texttt{wrecord} subfolder of the working directory. The subfolder is created if it does not already exist.
 
-The png frames can be used by extrnal utilities (i.e.\ outside of R) to produce movies. My preference is the powerful command line utility \texttt{ffmpeg}. An alternative option is the ImageMagick software suite which performs similar conversions.  A simple example would be to use\footnote{This will not play in Windows Media Player. The best appraoch is not to use WMP and use VLC instead. If you really want to use WMP, then try \texttt{ffmpeg -i wrecord\%04d.png -pix.fmt yuv420p out.mp4} instead.} \texttt{ffmpeg -i wrecord\%04d.png out.mp4} to produce an mp4 movie. You can produce a gif using \texttt{ffmpeg -i wrecord\%04d.png out.gif} but the file size will be large. The best option to reduce the file size is to restrict the color palette using:
+The png frames can be used by external utilities (i.e.\ outside of R) to produce movies. My preference is the powerful command line utility \texttt{ffmpeg}. An alternative option is the ImageMagick software suite which performs similar conversions.  A simple example would be to use\footnote{This will not play in Windows Media Player. The best approach is not to use WMP and use VLC instead. If you really want to use WMP, then try \texttt{ffmpeg -i wrecord\%04d.png -pix.fmt yuv420p out.mp4} instead.} \texttt{ffmpeg -i wrecord\%04d.png out.mp4} to produce an mp4 movie. You can produce a gif using \texttt{ffmpeg -i wrecord\%04d.png out.gif} but the file size will be large. The best option to reduce the file size is to restrict the color palette using:
 
 \begin{verbatim} 
 ffmpeg -i wrecord%04d.png -vf palettegen palette.png
@@ -431,45 +445,51 @@ plot(rCubes)
 dev.off()
 @
 
-If one cube can be rotated into another cube, then the cubes can in a rotation sense be considered equivalent. The function \texttt{all.equal} can be applied to two cubes to test for rotation equivalence, returning \texttt{TRUE} or \texttt{FALSE}. A different form of equivalence derives from recoloring. Two cubes are equivalent up to recoloring if swapping the sticker colors of one cube can produce the second cube. You can test this equivalence using the \texttt{==} comparison operator. The \texttt{==} operator will return \texttt{TRUE} if the orientations and permations are equal, but the spatial orientation vectors can be different. To test for exact equality you can use the R function \texttt{identical}, which tests if any two R objects are exactly the same. 
+If one cube can be rotated into another cube, then the cubes can in a rotation sense be considered equivalent. The function \texttt{all.equal} can be applied to two cubes to test for rotation equivalence, returning \texttt{TRUE} or \texttt{FALSE}. A different form of equivalence derives from recoloring. Two cubes are equivalent up to recoloring if swapping the sticker colors of one cube can produce the second cube. You can test this equivalence using the \texttt{==} comparison operator. The \texttt{==} operator will return \texttt{TRUE} if the orientations and permutations are equal, but the spatial orientation vectors can be different. To test for exact equality you can use the R function \texttt{identical}, which tests if any two R objects are exactly the same. 
 
-If the cube has symmetry properties, then a rotation of the cube may be equivalent to the original up to recoloring, in addition to being rotation equivalent. The following code gives an example of this using the easychecker pattern.
+If the cube has symmetry properties, then a rotation of the cube may be equivalent to the original up to recoloring, in addition to being rotation equivalent. The following code gives an example of this using the easy checkerboard pattern.
 
 <<echo=TRUE>>=
-aCube <- getCubieCube("easychecker")
+aCube <- getCubieCube("EasyCheckerboard")
 bCube <- move(aCube, "x2")
 all.equal(aCube, bCube)  # rotation equivalent ?
 aCube == bCube  # recoloring equivalent ?  
 identical(aCube, bCube)  # identical ?
 identical(aCube, getMovesCube("U2D2R2L2F2B2"))  # identical ?
+identical(aCube, invCube(aCube))  # self-inverse ?
 @
 
 \section{Solvers}
 \label{sect:solvers}
 
-The function \texttt{solver} implements the solvers. By default the Kociemba solver is used. The first argument is the cube to be solved. The target state of the solver does not need to be the solved cube. If the target state is not the solved cube, then it should be given as the second argument. If \texttt{A} is the cube to be solved and \texttt{B} is the target state, then \texttt{invCube(B) \%v\% A} needs to be solvable, or you will get an error. If the target state \texttt{B} is not the solved cube, then it is possible for both \texttt{A} and \texttt{B} to be unsolvable. 
+The function \texttt{solver} implements the solvers. By default the Kociemba solver is used. The first argument is the cube to be solved. The target state of the solver does not need to be the solved cube. If the target state is not the solved cube, then it should be given as the second argument. If \texttt{A} is the cube to be solved and \texttt{B} is the target state, then \texttt{invCube(B) \%v\% A} needs to be solvable, or you will get an error. If the target state \texttt{B} is not the solved cube, then it is possible for the solver to work even if both \texttt{A} and \texttt{B} are unsolvable. 
 
-All solvers use look-up tables called pruning tables\footnote{In the context of the IDA* search algorithm these are also called pattern databases or heuristics.} and move tables. These are silently loaded when a solver is first used, but do not need to be loaded again for subsequent use. A solver may therefore take slightly longer the first time it is called. The solvers are lightweight in the sense that they use small\footnote{Unless an R package is specified to contain data only, the total size of any (compressed) data cannot exceed 5MB for packages on CRAN.} pruning tables, but they are still fairly fast. The look-up tables are hidden objects and cannot be accessed directly.
+All solvers use look-up tables called pruning tables\footnote{In the context of the IDA* search algorithm these are also called pattern databases or heuristics.} and move tables. These are silently loaded when a solver is first used, but do not need to be loaded again for subsequent use. A solver will therefore take slightly longer the first time it is called. The solvers are lightweight in the sense that they use small\footnote{Unless an R package is specified to contain data only, the total size of any (compressed) data cannot exceed 5MB for packages on CRAN.} pruning tables, but they are still fairly fast. The look-up tables are hidden objects and cannot be accessed directly.
 
 <<echo=TRUE>>=
-aCube <- getCubieCube("bmamba")
+aCube <- getCubieCube("BlackMamba")
 solver(aCube, divide = TRUE)
-tCube <- getCubieCube("easychecker")
+tCube <- getCubieCube("EasyCheckerboard")
 solver(aCube, tCube, collapse = "-")
 @
 
 The two examples above demonstrate additional arguments. The \texttt{divide} argument adds a period symbol to represent the division between the first and second phases of the solver. Due to the solving method, the eight moves R R\textquotesingle\ F F\textquotesingle\ L L\textquotesingle\ B B\textquotesingle\  never occur in the second phase. The \texttt{collapse} argument returns a character string rather than a character vector, with the argument itself acting as a separator.
 
-The most important argument that impacts the behaviour of the solver is the \texttt{maxMoves} argument. The solver will always return a solution in \texttt{maxMoves} or less. For the Kociemba solver, the default value is $24$ moves. If you change it, then it must\footnote{This is not actually true. If you set the \texttt{bound} argument to \texttt{FALSE}, then you can override these limits and set \texttt{maxMoves} to whatever you want. However you may end up searching for a solution that does not exist, so the solver may be searching until the end of time. Or it may eventually give an error.} be an integer with $20$ being the smallest possible value and $30$ being the largest.
+An important argument that impacts the behaviour of the solver is the \texttt{maxMoves} argument. The solver will always return a solution in \texttt{maxMoves} or less. For the Kociemba solver, the default value is $24$ moves. If you change it, then it must\footnote{This is not actually true. If you set the \texttt{bound} argument to \texttt{FALSE}, then you can override these limits and set \texttt{maxMoves} to whatever you want. However you may end up searching for a solution that does not exist, so the solver may be searching until the end of time. Or it may eventually give an error.} be an integer with $20$ being the smallest possible value and $30$ being the largest.
 
-The time taken by the solver can be quite variable\footnote{The search process is like looking for your keys. Sometimes they just happen to be in the first place you look, but other times you will need to search every room in your house.}, but with the default \texttt{maxMoves} value it should return within one or two deciseconds. However if the value of \texttt{maxMoves} is $20$ and you hit a difficult case, you could be waiting a while. The superflip is known to take $20$ moves:
+The time taken by the solver can be quite variable. Below are some timings\footnote{The timing includes the cube simulation time, which is about one millisecond.} on my laptop in milliseconds using the \texttt{microbenchmark} function from the \textbf{microbenchmark} package, with 100,000 random cubes. The median solve time is approximately $0.03$ seconds, and over 99\% of cubes are solved within $0.13$ seconds. However if the value of \texttt{maxMoves} is $20$ and you hit a difficult case, you could be waiting a while. If you are experimenting with the \texttt{maxMoves} argument or you have a case that takes longer than expected, I advise setting the \texttt{verbose} argument to \texttt{TRUE}, which will allow you to track the progression of the search algorithm.
 
-<<echo=TRUE,eval=FALSE>>=
-aCube <- getCubieCube("superflip")
-solver(aCube, maxMoves = 20)
+<<echo=TRUE, eval=FALSE>>=
+tp <- microbenchmark(solver(randCube()), times = 100000)
+round(quantile(tp$time/10^6, prob = c(0,.01,seq(.05,.95,.05),.99,1)))
 @
 
-This takes about 15 seconds on my machine. However the superflip is not the worst case in terms of solving time. In experiments with \texttt{maxMoves} set to $20$ I have hit some cases which take minutes, and there may exist cases which take much longer. If you are experimenting with the \texttt{maxMoves} argument or you have a case that takes longer than expected, I advise setting the \texttt{verbose} argument to \texttt{TRUE}, which will allow you to track the progression of the search algorithm.
+\begin{verbatim}
+  0%   1%   5%  10%  15%  20%  25%  30%  35%  40%  45%  50%  
+   8    9   11   12   13   14   15   17   20   22   25   28   
+ 55%  60%  65%  70%  75%  80%  85%  90%  95%  99% 100% 
+  32   35   37   39   43   48   57   72   86  125  415 
+\end{verbatim}
 
 The \texttt{solver} function has a \texttt{type} argument to specify the type of solver. The default is \texttt{"KB"}, which is the Kociemba solver. Alternative values\footnote{If you read the code you may notice that some of it corresponds to ZZ and CFOP methods and last layer algorithms. My intention was to include pseudo-human solvers for ZZ and CFOP, but they were unfinished when I reached my self-imposed deadline for the package release. I left some of this code in the package for future development. Maybe next year.} are \texttt{"ZT"} for the Zemdegs-Twist\footnote{Named after a corner twist from Australian speedcuber Felix Zemdegs.} solver and \texttt{"TF"} for the Twist-Flip solver.
 

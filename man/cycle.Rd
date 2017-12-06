@@ -70,7 +70,7 @@ cycleCorners(aCube, cycle, right = TRUE, orient = TRUE)
 \seealso{\code{\link{\%v\%}}, \code{\link{is.solvable}}, \code{\link{is.solved}}, \code{\link{invCube}}}
 
 \examples{
-aCube <- getCubieCube("superflip")
+aCube <- getCubieCube("Superflip")
 aCube <- flipEdges(aCube, flip = 1:12)
 is.solved(aCube)
 aCube <- twistCorners(aCube, clock = 3:6, anti = 2)

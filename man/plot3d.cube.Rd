@@ -49,7 +49,7 @@
   \code{\link{plot.rotCubes}}, \code{\link{plot.seqCubes}}}
 
 \examples{
-aCube <- getCubieCube("superflip")
+aCube <- getCubieCube("Superflip")
 \dontrun{plot3d(aCube)}
 }
 \keyword{dynamic}

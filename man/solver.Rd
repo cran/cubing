@@ -86,7 +86,7 @@ solver(aCube, tCube, type = c("KB", "ZT", "TF"), inv = FALSE,
   \code{\link{is.solvable}}, \code{\link{scramble}}}
 
 \examples{
-aCube <- getCubieCube("easychecker")
+aCube <- getCubieCube("EasyCheckerboard")
 \dontrun{plot(aCube)}
 \dontrun{plot3d(aCube)}
 mvs <- solver(aCube, type = "KB")
