@@ -70,9 +70,9 @@ identical(aCube, bCube)
 is.stickerCube(aCube)
 
 \dontrun{plot(aCube)}
-\dontrun{plot3d(aCube)}
+\dontrun{plot3D(aCube)}
 \dontrun{plot(cCube)}
-\dontrun{plot3d(cCube)}
+\dontrun{plot3D(cCube)}
 
 \dontrun{plot(getStickerCube(), numbers = TRUE)}
 \dontrun{plot(getStickerCube(), numbers = TRUE, blank = TRUE)}

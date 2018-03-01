@@ -43,7 +43,7 @@ cCube <- move(aCube, "z'M2")
 identical(bCube, cCube)
 
 \dontrun{plot(cCube)}
-\dontrun{plot3d(cCube)}
+\dontrun{plot3D(cCube)}
 }
 \keyword{manip}
 

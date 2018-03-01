@@ -74,9 +74,9 @@ identical(aCube, bCube)
 is.cubieCube(aCube)
 
 \dontrun{plot(aCube)}
-\dontrun{plot3d(aCube)}
+\dontrun{plot3D(aCube)}
 \dontrun{plot(cCube)}
-\dontrun{plot3d(cCube)}
+\dontrun{plot3D(cCube)}
 
 \dontrun{plot(getCubieCube(), numbers = TRUE)}
 \dontrun{plot(getCubieCube(), numbers = TRUE, blank = TRUE)}

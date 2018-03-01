@@ -34,7 +34,7 @@
     functions.}
 }
 
-\seealso{\code{\link{animate}}, \code{\link{plot3d.cube}}, 
+\seealso{\code{\link{animate}}, \code{\link{plot3D.cube}}, 
   \code{\link{plot.rotCubes}}, \code{\link{plot.seqCubes}}}
 
 \examples{

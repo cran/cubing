@@ -88,7 +88,7 @@ solver(aCube, tCube, type = c("KB", "ZT", "TF"), inv = FALSE,
 \examples{
 aCube <- getCubieCube("EasyCheckerboard")
 \dontrun{plot(aCube)}
-\dontrun{plot3d(aCube)}
+\dontrun{plot3D(aCube)}
 mvs <- solver(aCube, type = "KB")
 is.solved(aCube \%v\% getMovesCube(mvs))
 }

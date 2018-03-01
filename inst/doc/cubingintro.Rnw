@@ -17,6 +17,7 @@
 
 \title{An Introduction to the Cubing Package}
 \author{Alec Stephenson \\ Melbourne, Australia}
+\date{December 6, 2017}
 \maketitle
 
 \begin{center}
@@ -63,7 +64,7 @@ bCube <- getCubieCube("EasyCheckerboard")
 cCube <- getCubieCube("HenrysSnake")
 @
 
-There isn't much point creating pretty patterns that you can't see. There are two ways of displaying a cube. The first is the \texttt{plot} function\footnote{The \texttt{plot} and \texttt{plot3d} functions are called generic functions. This means that if you want to read the help files you will need to use \texttt{?plot.cube} and \texttt{?plot3d.cube}.} which creates a flat 2D plot. The second is to use the \texttt{plot3d} function with creates an interactive 3D plot that you can use your mouse to rotate and zoom. For example, the superflip cube in Figure \ref{sflip1} can be displayed using \texttt{plot(aCube)}. For the 3D interactive plot, use \texttt{plot3d(aCube)}.
+There isn't much point creating pretty patterns that you can't see. There are two ways of displaying a cube. The first is the \texttt{plot} function\footnote{The \texttt{plot} and \texttt{plot3D} functions are called generic functions. This means that if you want to read the help files you will need to use \texttt{?plot.cube} and \texttt{?plot3D.cube}.} which creates a flat 2D plot. The second is to use the \texttt{plot3D} function with creates an interactive 3D plot that you can use your mouse to rotate and zoom. For example, the superflip cube in Figure \ref{sflip1} can be displayed using \texttt{plot(aCube)}. For the 3D interactive plot, use \texttt{plot3D(aCube)}.
 
 <<label=sflip1, echo=FALSE>>=
 plot(aCube)
@@ -76,13 +77,13 @@ plot(aCube)
 @
 \end{center}
 \vspace{-1cm}
-\caption{A 2D plot of the superflip, produced using \texttt{plot(aCube)}. For a 3D interactive plot, use \texttt{plot3d(aCube)}.}
+\caption{A 2D plot of the superflip, produced using \texttt{plot(aCube)}. For a 3D interactive plot, use \texttt{plot3D(aCube)}.}
 \label{sflip1}
 \end{figure}
 
 \subsection{Sticker Colors}
 
-The R option \texttt{cubing.colors} controls the sticker colors used by default in the \texttt{plot} and \texttt{plot3d} displays. The default colors are given by 
+The R option \texttt{cubing.colors} controls the sticker colors used by default in the \texttt{plot} and \texttt{plot3D} displays. The default colors are given by 
 
 <<echo=TRUE>>=
 getOption("cubing.colors")
@@ -130,7 +131,7 @@ We have seen how to create a cube with a pretty pattern, so here we will do the 
 <<eval=FALSE, echo=TRUE>>=
 aCube <- randCube()
 plot(aCube)
-plot3d(aCube)
+plot3D(aCube)
 @
 
 \subsection{Creating a Moves Cube}
@@ -163,8 +164,8 @@ Another use of the cube composition operator \texttt{\%v\%} is to create even mo
 <<echo=TRUE, eval=FALSE>>=
 aCube <- getCubieCube("Anaconda") %v% getCubieCube("FourSpots")
 bCube <- getCubieCube("FourSpots") %v% getCubieCube("Anaconda")
-plot3d(aCube)
-plot3d(bCube)
+plot3D(aCube)
+plot3D(bCube)
 @
 
 \subsection{Creating a Random Moves Cube}
@@ -364,7 +365,7 @@ scramble(3, state = TRUE)
 \section{Animations and Flick Books}
 \label{sect:anflick}
 
-The \texttt{plot} and \texttt{plot3d} functions produce 2D and interactive 3D plots of a cube. You can similarly produce 2D and 3D displays of an entire move sequence, which you can turn into flick books and movies (e.g.\ gifs or mp4 files) respectively. We will continue the example from Section \ref{subsect:move} of the 4.59 second world record of SeungBeom Cho. The \texttt{mv} object is the reconstructed move sequence and \texttt{aCube} is the scrambled cube.
+The \texttt{plot} and \texttt{plot3D} functions produce 2D and interactive 3D plots of a cube. You can similarly produce 2D and 3D displays of an entire move sequence, which you can turn into flick books and movies (e.g.\ gifs or mp4 files) respectively. We will continue the example from Section \ref{subsect:move} of the 4.59 second world record of SeungBeom Cho. The \texttt{mv} object is the reconstructed move sequence and \texttt{aCube} is the scrambled cube.
 
 \subsection{Flick Books}
 \label{subsect:flick}
@@ -400,7 +401,7 @@ Animations can be produced using the \texttt{animate} function. There are a larg
 animate(aCube, mv)
 @
 
-As with the \texttt{plot3d} function, the animation is interactive, so you can zoom and spin the cube around with your mouse while it is animating. To produce movies, the animation needs to be recorded, which can be done using the \texttt{movie} argument. If you spin the cube around during the animation, this will be recorded in the movie.
+As with the \texttt{plot3D} function, the animation is interactive, so you can zoom and spin the cube around with your mouse while it is animating. To produce movies, the animation needs to be recorded, which can be done using the \texttt{movie} argument. If you spin the cube around during the animation, this will be recorded in the movie.
 
 <<echo=TRUE,eval=FALSE>>=
 animate(aCube, mv, movie = "wrecord")

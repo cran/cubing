@@ -65,13 +65,13 @@ animate(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), recolor = FA
   external utilities. One powerful command line utility is ffmpeg. ImageMagick is
   a software suite which performs similar conversions.
 
-  The \code{plot3d} function also uses the \bold{rgl} package to produce interactive plots 
+  The \code{plot3D} function also uses the \bold{rgl} package to produce interactive plots 
   for individual cubes.
 
   For a 2D version of the animate function, see \code{plot.seqCubes}.  
 }
 
-\seealso{\code{\link{plot3d.cube}}, \code{\link{plot.cube}}, 
+\seealso{\code{\link{plot3D.cube}}, \code{\link{plot.cube}}, 
   \code{\link{plot.rotCubes}}, \code{\link{plot.seqCubes}}}
 
 \examples{

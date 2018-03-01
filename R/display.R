@@ -1,7 +1,7 @@
 
 ###################################################
 
-# plot.cube plot3d.cube animate
+# plot.cube plot3D plot3D.cube animate
 
 ###################################################
 
@@ -46,7 +46,8 @@ plot.cube <- function(x, colvec = getOption("cubing.colors"), recolor = FALSE,
   invisible(aCube)
 }
 
-plot3d.cube <- function(x, colvec = getOption("cubing.colors"), recolor = FALSE, 
+plot3D <- function (x, ...) UseMethod("plot3D")
+plot3D.cube <- function(x, colvec = getOption("cubing.colors"), recolor = FALSE, 
                         bg = grey(0.8), rand.col = FALSE, size = 0.98, col.interior = grey(0.5), 
                         al.interior = 0.4, al.exterior = 1, rinit = 30, bbox = TRUE, bbcolor = "#333377", bbemission = "#333377", 
                         bbspecular = "#3333FF", bbshininess = 5, bbalpha = 0.5, ...) 

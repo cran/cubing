@@ -43,8 +43,8 @@ is.solved(invCube(aCube) \%v\% aCube)
 
 \dontrun{plot(aCube)}
 \dontrun{plot(invCube(aCube))}
-\dontrun{plot3d(aCube)}
-\dontrun{plot3d(invCube(aCube))}
+\dontrun{plot3D(aCube)}
+\dontrun{plot3D(invCube(aCube))}
 }
 \keyword{manip}
 

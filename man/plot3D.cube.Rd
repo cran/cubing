@@ -1,12 +1,13 @@
-\name{plot3d.cube}
-\alias{plot3d.cube}
+\name{plot3D.cube}
+\alias{plot3D.cube}
+\alias{plot3D}
 
 \title{Cube Object Interactive 3D Plot}
 \description{
   Plots an interactive 3D representation of a cube object using OpenGL.
 }
 \usage{
-\method{plot3d}{cube}(x, colvec = getOption("cubing.colors"), recolor = FALSE, 
+\method{plot3D}{cube}(x, colvec = getOption("cubing.colors"), recolor = FALSE, 
    bg = grey(0.8), rand.col = FALSE, size = 0.98, col.interior = grey(0.5), 
    al.interior = 0.4, al.exterior = 1, rinit = 30, bbox = TRUE, bbcolor = 
    "#333377", bbemission = "#333377", bbspecular = "#3333FF", bbshininess = 
@@ -50,6 +51,6 @@
 
 \examples{
 aCube <- getCubieCube("Superflip")
-\dontrun{plot3d(aCube)}
+\dontrun{plot3D(aCube)}
 }
 \keyword{dynamic}
