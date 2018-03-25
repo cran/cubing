@@ -2,6 +2,7 @@
 ###################################################
 
 # getStickerCube getCubieCube
+# (getMovesPattern)
 
 ###################################################
 
@@ -9,6 +10,7 @@
 # isolated other than single call to getMovesCube in getCubieCube and getStickerCube
 # 68 patterns excluding solved case 
 
+# uses only URFDLB face turns
 getMovesPattern <- function(pattern = c("Solved","Superflip","EasyCheckerboard","Wire","PlusMinus",
   "Tablecloth","Spiral","SpeedsolvingLogo","VerticalStripes","OppositeCorners","Cross","UnionJack",
   "CubeInTheCube","CubeInACubeInACube","Anaconda","Python","BlackMamba","GreenMamba","FourSpots",

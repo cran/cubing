@@ -6,7 +6,7 @@
   Creates a cube that corresponds to a move sequence via post-multiplication.
 }
 \usage{
-getMovesCube(moves, cubie = TRUE)
+getMovesCube(moves = character(0), cubie = TRUE)
 }
 \arguments{
   \item{moves}{A move sequence; either a single string or a character vector with 

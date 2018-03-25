@@ -1,11 +1,14 @@
 \name{rotate}
 \alias{rotate}
 \alias{slice}
-\title{Perform Rotations and Middle Slice Moves}
+\alias{wide}
+\title{Perform Rotations, Wide Moves and Middle Slice Moves}
 \description{
-  Functions for rotating the whole cube and performing middle slice (E M S) moves. 
+  Functions for rotating the whole cube and performing middle slice (E M S) 
+  and wide (Uw Rw Fw Dw Lw Bw) moves. 
 }
 \usage{
+wide(aCube, wmv)
 slice(aCube, smv)
 rotate(aCube, rot)
 }
@@ -13,6 +16,10 @@ rotate(aCube, rot)
   \item{aCube}{A cubieCube object.}
   \item{smv}{A single string giving a middle slice move. Must be one of
      E E1 E2 E2' E3 E' M M1 M2 M2' M3 M' S S1 S2 S2' S3 S'.}
+  \item{wmv}{A single string giving a wide move. Lower case letters and w
+     notation are both allowed. For turns on the U face must be one of 
+	 Uw u Uw1 u1 Uw2 u2 Uw2' u2' Uw' u' Uw3 u3, and similarly for the
+     R F D L B faces.}
   \item{rot}{A rotation. This can be specified using an integer or a character
     string. If an integer, must be a number between 1 and 24 representing one
 	of the 24 possible rotations in space. The number 1 is the no rotation case.
@@ -23,13 +30,13 @@ rotate(aCube, rot)
 }
 \details{
   These functions are used internally by the \code{move} function for
-  performing rotations and middle slice moves, but can also be called directly
-  if you only need to perform a single move. In most circumstances it is better
-  to use the \code{move} function.
+  performing rotations, wide moves and middle slice moves, but can also be called 
+  directly if you only need to perform a single move. In most circumstances it is 
+  better to use the \code{move} function.
   
   The definition of the E M S middle slice moves is respectively given by D'Uy' L'Rx' B'Fz'.
   In particular, the S slice direction is different to what you may find elsewhere;
-  the definition used for S in this package is mathematically consistent with E and M.  
+  the definition used for S in this package is consistent with the rotation directions.  
 }
 \value{
   A cubieCube object.

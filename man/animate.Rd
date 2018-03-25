@@ -16,10 +16,10 @@ animate(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), recolor = FA
 \arguments{
   \item{aCube}{Any cube object.}
   \item{moves}{A move sequence; either a single string or a character vector with 
-    one element per move. Can include URFDLBEMS face turns and xyz rotations.}
-  \item{fpt}{Number of frames per cube turn (quarter turn or half turn). Must 
-    be a non-negative even integer. Whole cube rotations use half the number of frames 
-	as a turn.}
+    one element per move. Can include URFDLBEMS face turns, wide turns and xyz 
+	rotations.}
+  \item{fpt}{Number of frames per quarter turn. Must be a non-negative even integer. 
+    Whole cube rotations and wide moves use half the number of frames.}
   \item{colvec}{Vector of sticker colors. The default is the \code{cubing.colors} option.}
   \item{recolor}{If \code{TRUE}, previous rotations are ignored 
     and therefore the cube is recolored when initially displayed.}
@@ -56,6 +56,11 @@ animate(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), recolor = FA
   \item{\dots}{Other parameters to be passed through to plotting functions.}
 }
 \details{
+  The move U3 represents three quarter turns in a clockwise direction, and so the animation
+  is different to the quarter turn anti-clockwise move U', even though the resulting cube is
+  the same. This similarly applies to the U3' and U moves, and to the half turn moves U2 and 
+  U2'. Wide turns can be denoted by lower case or w notation, so u2 and Uw2 are equivalent.
+
   This function uses the \R package \bold{rgl} which is an interface to OpenGL.
   During the animation, the cube can be rotated using a mouse, and the rotations
   will be captured in the png frames if \code{movie} is not \code{NULL}. See the 

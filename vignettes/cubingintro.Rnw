@@ -16,7 +16,7 @@
 \SweaveOpts{concordance=TRUE}
 
 \title{An Introduction to the Cubing Package}
-\author{Alec Stephenson \\ Melbourne, Australia}
+\author{Alec Stephenson \\ Melbourne, Australia  \\ Version 1.0-3, 2018-03-25}
 \date{December 6, 2017}
 \maketitle
 
@@ -30,9 +30,11 @@ This document gives an brief non-technical introduction to the R package \textbf
 
 The definitive help for any function can be seen by typing a question mark followed by the function name, such as \texttt{?move} for the \texttt{move} function. An exception is for the operator \texttt{\%v\%}, which must also be surrounded by quotation marks, so use \texttt{?"\%v\%"} to read the help on that. The help file will be more detailed than the information given in this document. Using \texttt{examples(move)} will run the code in the examples section of the help file for the \texttt{move} function.
 
-I will always use double quote marks rather than single quote marks when using character strings, because a single quote mark is used for prime moves such as \texttt{U\textquotesingle} and \texttt{F\textquotesingle}. This means that if you use single quote marks, you will need to escape the prime with a backslash. Double quote marks are therefore simpler to use. It is assumed that you know standard move notation for cubing. The package also accepts variants for input, for example \texttt{U} \texttt{U1} \texttt{U\textquotesingle} \texttt{U3} \texttt{U2} and \texttt{U2\textquotesingle} are all valid moves.
+I will always use double quote marks rather than single quote marks when using character strings, because a single quote mark is used for prime moves such as \texttt{U\textquotesingle} and \texttt{F\textquotesingle}. This means that if you use single quote marks, you will need to escape the prime with a backslash. Double quote marks are therefore simpler to use. It is assumed that you know standard move notation for cubing. The package also accepts variants for input, for example \texttt{U} \texttt{U1} \texttt{U\textquotesingle} \texttt{U1\textquotesingle} \texttt{U3} \texttt{U3\textquotesingle} \texttt{U2} and \texttt{U2\textquotesingle} are all valid moves. 
 
-In this package we define middle slice moves by \texttt{E = D\textquotesingle Uy\textquotesingle},  \texttt{M = L\textquotesingle Rx\textquotesingle} and \texttt{S =  B\textquotesingle Fz\textquotesingle}. The \texttt{S} move is therefore in the opposite direction to the more commonly used definition. It is re-defined here for mathematical consistency.
+The move \texttt{U3} represents three quarter-turns in the clockwise direction, which gives the same cube as the anti-clockwise quarter turn \texttt{U\textquotesingle} (or \texttt{U1\textquotesingle}), but the animations will display the different turn directions. This similarly applies to the \texttt{U3\textquotesingle} and \texttt{U} (or \texttt{U1}) moves, and to the half-turn moves \texttt{U2\textquotesingle} and \texttt{U2}.
+
+In this package we define middle slice moves by \texttt{E = D\textquotesingle Uy\textquotesingle},  \texttt{M = L\textquotesingle Rx\textquotesingle} and \texttt{S =  B\textquotesingle Fz\textquotesingle}. The \texttt{S} move is therefore in the opposite direction to the more commonly used definition. It is re-defined here for consistency with the direction of the \texttt{x} \texttt{y} \texttt{z} rotations. Wide moves can be denoted by either lower case letters or by \texttt{w} notation. For example, \texttt{u} and \texttt{Uw} are equivalent: both are equal to \texttt{UE\textquotesingle = Dy}.
 
 If you use this package, then it would be good to also reference it. To cite this package or this manual please type \texttt{citation("cubing")} and use the resulting citation.
 
@@ -171,7 +173,7 @@ plot3D(bCube)
 \subsection{Creating a Random Moves Cube}
 \label{subsect:movescube}
 
-The function \texttt{randMoves} is very similar to \texttt{randCube} but it creates random move sequences\footnote{For more on move sequences, see the functions \texttt{invMoves}, \texttt{rotMoves} and \texttt{mirMoves}, which invert, rotate and mirror move sequences.} rather than random cubes. The second argument to \texttt{randMoves} gives the length of each move sequence, which by default is $20$. By combining this with \texttt{getMovesCube} we can create a different type of random cube which is constructed from random moves.
+The function \texttt{randMoves} is very similar to \texttt{randCube} but it creates random move sequences\footnote{For more on move sequences, see the functions \texttt{invMoves}, \texttt{rotMoves} and \texttt{mirMoves}, which invert, rotate and mirror move sequences. See also \texttt{moveOrder}, which calculates the order of a move sequence.} rather than random cubes. The second argument to \texttt{randMoves} gives the length of each move sequence, which by default is $20$. By combining this with \texttt{getMovesCube} we can create a different type of random cube which is constructed from random moves.
 
 <<eval=TRUE, echo=TRUE>>=
 rCube <- getMovesCube(randMoves(1, nm = 22))
@@ -305,9 +307,9 @@ It can be more complicated to determine when an unsolvable cube becomes solvable
 \subsection{Move a Cube}
 \label{subsect:move}
 
-In Section \ref{subsect:movescube} we saw one way to generate moves using the \texttt{\%v\%} operator with \texttt{getMovesCube}, but the \texttt{move} function is more general because it allows for rotations and middle slice (E, M and S) moves. The first argument of the \texttt{move} function is the cube to be moved, and the second is the move sequence.
+In Section \ref{subsect:movescube} we saw one way to generate moves using the \texttt{\%v\%} operator with \texttt{getMovesCube}, but the \texttt{move} function is more general because it allows for rotations (x, y and z), middle slice (E, M and S), and wide (Uw, Rw, Fw, Dw, Lw and Bw) moves. The first argument of the \texttt{move} function is the cube to be moved, and the second is the move sequence.
 
-For our example we will use the 4.59 second world record of SeungBeom Cho. We need first to read in the scramble and a reconstruction of the solve. To do this we use the R function \texttt{scan} and just copy and paste from\footnote{Courtesy of forum member Brest, The Super Reconstructor.} the speedsolving.com forums. You could also save it as a text file and specify the filename as an argument to \texttt{scan}. We immediately construct the scrambled cube by placing the first call to \texttt{scan} (which reads the scramble sequence) within the \texttt{getMovesCube} function. 
+For our example we will use the 4.59 second world record of SeungBeom Cho. We need first to read in the scramble and a reconstruction of the solve. To do this we use the R function \texttt{scan} and just copy and paste from \texttt{http://www.cubesolv.es/}. You could also save them as text files and specify the filenames as an argument to \texttt{scan}. We immediately construct the scrambled cube by placing the first call to \texttt{scan} (which reads the scramble sequence) within the \texttt{getMovesCube} function. 
 
 \begin{verbatim} 
 > aCube <- getMovesCube(scan(what = character()))
@@ -339,6 +341,27 @@ U' // AUF")
 mv <- scan(tcon, what = character(), comment.char = "/") 
 close(tcon)
 @ 
+
+Alternatively, the function \texttt{read.cubesolve} can be used to read from the cube solves website directly. The id for the SeungBeom Cho world record is 4995, so we pass this id to the function. The returned value is a list with the scramble, solution and description.
+
+\begin{verbatim} 
+> cho <- read.cubesolve(4995)
+> cho
+$scramble
+ [1] "D2" "F2" "U"  "F2" "D"  "R2" "D"  "B"  "L'" "B"  "R"  "U"  "L"  "R" 
+[15] "U"  "L2" "F"  "L'" "U'"
+
+$solution
+ [1] "x2"  "D'"  "R'"  "L2'" "U'"  "F"   "U'"  "F'"  "D'"  "U'"  "U'" 
+[12] "R'"  "y'"  "R'"  "U'"  "R"   "y'"  "R"   "U'"  "R'"  "U'"  "R"  
+[23] "U"   "R'"  "U'"  "R'"  "U'"  "F'"  "U"   "F"   "R"   "U'" 
+
+$description
+[1] "4.59 WR 3x3 solve by  SeungBeom Cho at ChicaGhosts 2017"
+
+> aCube <- getMovesCube(cho$scramble)
+> mv <- cho$solution
+\end{verbatim} 
 
 Now we have the scrambled cube \texttt{aCube} and the move reconstruction \texttt{mv}, we can use the \texttt{move} function to apply the moves to the cube.
 
@@ -417,6 +440,25 @@ ffmpeg -i wrecord%04d.png -i palette.png  -lavfi "paletteuse" out.gif
 \end{verbatim}
 
 The \texttt{ffmpeg} command line utility can also adjust the frame rate, add audio, and do many other things.
+
+\subsubsection*{Multiple Animations}
+
+In order to produce aminations of several solves, we can use the \texttt{read.cubesolve} function and the \texttt{animate} function in a loop such as the following.
+
+\begin{verbatim}
+for(i in 5000:5010) 
+{
+  tst <- read.cubesolve(i, warn = TRUE)
+  if(grepl("3x3", tst$description)) {
+    cat("id =", i, "\n")
+    cat(tst$description, "\n\n")
+    if(length(tst$scramble) != 0 && length(tst$solution) != 0) 
+      animate(move(getCubieCube(), tst$scramble), tst$solution)
+  }
+}
+\end{verbatim}
+
+The loop is over the id numbers on the cube solves website. The data is read with \texttt{read.cubesolve}, and the description is tested for the characters \texttt{3x3} by the function \texttt{grepl}. The will be true for 3x3, 3x3OH (one-handed) and 3x3BLD (blind) events. The description and id number are printed to the screen, and if the scramble and solution are both present, then the animation is performed. We use \texttt{move} to produce the scrambled cube because in blind events the scramble may contain a rotation or a wide move. The \texttt{warn = TRUE} option in \texttt{read.cubesolve} ensures that the loop continues if the id does not exist.
 
 \section{Rotations and Equivalence}
 \label{sect:roteq}

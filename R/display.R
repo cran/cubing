@@ -135,12 +135,8 @@ animate <- function(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), 
   } 
   if(!is.stickerCube(aCube)) 
     stop("argument must be a cube object")
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  }
+  
+  moves <- convertMoves(moves)
   if(length(size) != 1 || size >= 1) 
     stop("size must be value less than 1")
   size <- size/2
@@ -149,14 +145,16 @@ animate <- function(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), 
     stop("fpt must be an even non-negative integer")
   
   colv <- c("U", "R", "F", "D", "L", "B")
-  colv <- paste0(rep(colv,each = 6), rep(c("","1","2","2'","3","'"), length(colv)))
+  colv <- paste0(rep(colv,each = 6), rep(c("","3'","2","2'","'","3"), length(colv)))
+  widv <- c("Uw", "Rw", "Fw", "Dw", "Lw", "Bw")
+  widv <- paste0(rep(widv,each = 6), rep(c("","3'","2","2'","'","3"), length(widv)))
   slv <- c("E", "M", "S")
-  slv <- paste0(rep(slv,each = 6), rep(c("","1","2","2'","3","'"), length(slv)))
+  slv <- paste0(rep(slv,each = 6), rep(c("","3'","2","2'","'","3"), length(slv)))
   rotv <- c("x", "y", "z")
-  rotv <- paste0(rep(rotv,each = 6), rep(c("","1","2","2'","3","'"), length(rotv)))
-  legal <- (moves %in% c(colv,slv,rotv))
+  rotv <- paste0(rep(rotv,each = 6), rep(c("","3'","2","2'","'","3"), length(rotv)))
+  legal <- (moves %in% c(colv,widv,slv,rotv))
   if(!all(legal)) 
-    stop("only URFDLBEMS face turns and xyz rotations allowed")
+    stop("only URFDLBEMS face turns URFDLB wide moves and xyz rotations allowed")
   
   ord <- c("D", "B", "R", "L", "F", "U")
   z18 <- numeric(18); z6 <- numeric(6); z2 <- numeric(2)
@@ -230,31 +228,30 @@ animate <- function(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), 
     {
       
       ivec <- switch(EXPR = mvj,
-                     "y1" =, "y" =, "y'" =, "y3" =, "y2'" =, "y2" = 
+                     "y3'" =, "y" =, "y'" =, "y3" =, "y2'" =, "y2" = 
                        list(list(c(1,2,3,4),c(5,6,7,8),1),list(c(5,6,7,8),c(9,10,11,12),4),list(numeric(0),c(1,2,3,4),c(2,3,5,6))),
-                     "x1" =, "x" =, "x'" =, "x3" =, "x2'" =, "x2" = 
+                     "x3'" =, "x" =, "x'" =, "x3" =, "x2'" =, "x2" = 
                        list(list(c(1,4,5,8),c(1,4,5,9),2),list(c(2,3,6,7),c(2,3,7,11),5),list(numeric(0),c(6,8,10,12),c(1,3,4,6))),
-                     "z1" =, "z" =, "z'" =, "z3" =, "z2'" =, "z2" = 
+                     "z3'" =, "z" =, "z'" =, "z3" =, "z2'" =, "z2" = 
                        list(list(c(1,2,5,6),c(1,2,6,10),3),list(c(3,4,7,8),c(3,4,8,12),6),list(numeric(0),c(5,7,9,11),c(1,2,4,5))))
       
-      
       tr <- switch(EXPR = mvj,
-                   "y1" =, "y" =, "y'" =, "y3" =, "y2'" =, "y2" = 
+                   "y3'" =, "y" =, "y'" =, "y3" =, "y2'" =, "y2" = 
                      list(c(0, 0, -1),c(0, 0, 1),c(0, 0, 0)),
-                   "x1" =, "x" =, "x'" =, "x3" =, "x2'" =, "x2" = 
+                   "x3'" =, "x" =, "x'" =, "x3" =, "x2'" =, "x2" = 
                      list(c(-1, 0, 0),c(1, 0, 0),c(0, 0, 0)),
-                   "z1" =, "z" =, "z'" =, "z3" =, "z2'" =, "z2" = 
+                   "z3'" =, "z" =, "z'" =, "z3" =, "z2'" =, "z2" = 
                      list(c(0, 1, 0),c(0, -1, 0),c(0, 0, 0)))
       rt <- switch(EXPR = mvj,
-                   "y1" =, "y" =, "y2" = c(0, 0, 1),
-                   "x1" =, "x" =, "x2" = c(1, 0, 0),
-                   "z1" =, "z" =, "z2" = c(0, -1, 0),
-                   "y'" =, "y2'" =, "y3" = c(0, 0, -1),
-                   "x'" =, "x2'" =, "x3" = c(-1, 0, 0),
-                   "z'" =, "z2'" =, "z3" = c(0, 1, 0))
+                   "y3" =, "y" =, "y2" = c(0, 0, 1),
+                   "x3" =, "x" =, "x2" = c(1, 0, 0),
+                   "z3" =, "z" =, "z2" = c(0, -1, 0),
+                   "y'" =, "y2'" =, "y3'" = c(0, 0, -1),
+                   "x'" =, "x2'" =, "x3'" = c(-1, 0, 0),
+                   "z'" =, "z2'" =, "z3'" = c(0, 1, 0))
       
-      ht <- fpt/2*(1 + as.numeric(grepl(2, mvj)))
-      for(k in 1:ht) 
+      nfrm <- fpt/2*(1 + grepl("2", mvj) + 2*grepl("3", mvj))
+      for(k in 1:nfrm) 
       {
         rgl::par3d(skipRedraw = TRUE)
         for(slice in 1:3) {
@@ -298,38 +295,120 @@ animate <- function(aCube, moves, fpt = 8, colvec = getOption("cubing.colors"), 
       centrevec <- centrevec[getPO$spor]
       centreids <- centreids[getPO$spor]
       
+    } else if(mvj %in% widv) {
+      
+      ivec <- switch(EXPR = mvj,
+                     "Uw3'" =, "Uw" =, "Uw'" =, "Uw3" =, "Uw2'" =, "Uw2" = 
+                       list(list(c(1,2,3,4),c(5,6,7,8),1),list(numeric(0),c(1,2,3,4),c(2,3,5,6))),
+                     "Rw3'" =, "Rw" =, "Rw'" =, "Rw3" =, "Rw2'" =, "Rw2" = 
+                       list(list(c(1,4,5,8),c(1,4,5,9),2),list(numeric(0),c(6,8,10,12),c(1,3,4,6))),
+                     "Fw3'" =, "Fw" =, "Fw'" =, "Fw3" =, "Fw2'" =, "Fw2" = 
+                       list(list(c(1,2,5,6),c(1,2,6,10),3),list(numeric(0),c(5,7,9,11),c(1,2,4,5))),
+                     "Dw3'" =, "Dw" =, "Dw'" =, "Dw3" =, "Dw2'" =, "Dw2" = 
+                       list(list(c(5,6,7,8),c(9,10,11,12),4),list(numeric(0),c(1,2,3,4),c(2,3,5,6))),
+                     "Lw3'" =, "Lw" =, "Lw'" =, "Lw3" =, "Lw2'" =, "Lw2" = 
+                       list(list(c(2,3,6,7),c(2,3,7,11),5),list(numeric(0),c(6,8,10,12),c(1,3,4,6))),
+                     "Bw3'" =, "Bw" =, "Bw'" =, "Bw3" =, "Bw2'" =, "Bw2" = 
+                       list(list(c(3,4,7,8),c(3,4,8,12),6),list(numeric(0),c(5,7,9,11),c(1,2,4,5))))
+      
+      tr <- switch(EXPR = mvj,
+                   "Uw3'" =, "Uw" =, "Uw'" =, "Uw3" =, "Uw2'" =, "Uw2" = 
+                     list(c(0, 0, -1),c(0, 0, 0)),
+                   "Rw3'" =, "Rw" =, "Rw'" =, "Rw3" =, "Rw2'" =, "Rw2" = 
+                     list(c(-1, 0, 0),c(0, 0, 0)),
+                   "Fw3'" =, "Fw" =, "Fw'" =, "Fw3" =, "Fw2'" =, "Fw2" = 
+                     list(c(0, 1, 0),c(0, 0, 0)),
+                   "Dw3'" =, "Dw" =, "Dw'" =, "Dw3" =, "Dw2'" =, "Dw2" = 
+                     list(c(0, 0, 1),c(0, 0, 0)),
+                   "Lw3'" =, "Lw" =, "Lw'" =, "Lw3" =, "Lw2'" =, "Lw2" = 
+                     list(c(1, 0, 0),c(0, 0, 0)),
+                   "Bw3'" =, "Bw" =, "Bw'" =, "Bw3" =, "Bw2'" =, "Bw2" = 
+                     list(c(0, -1, 0),c(0, 0, 0)))
+      rt <- switch(EXPR = mvj,
+                   "Uw3" =, "Uw" =, "Uw2" =, "Dw'" =, "Dw2'" =, "Dw3'" = c(0, 0, 1),
+                   "Rw3" =, "Rw" =, "Rw2" =, "Lw'" =, "Lw2'" =, "Lw3'" = c(1, 0, 0),
+                   "Fw3" =, "Fw" =, "Fw2" =, "Bw'" =, "Bw2'" =, "Bw3'" = c(0, -1, 0),
+                   "Uw'" =, "Uw2'" =, "Uw3'" =, "Dw3" =, "Dw" =, "Dw2" = c(0, 0, -1),
+                   "Rw'" =, "Rw2'" =, "Rw3'" =, "Lw3" =, "Lw" =, "Lw2" = c(-1, 0, 0),
+                   "Fw'" =, "Fw2'" =, "Fw3'" =, "Bw3" =, "Bw" =, "Bw2" = c(0, 1, 0))
+      
+      nfrm <- fpt/2*(1 + grepl("2", mvj) + 2*grepl("3", mvj))
+      for(k in 1:nfrm) 
+      {
+        rgl::par3d(skipRedraw = TRUE)
+        for(slice in 1:2) {
+          trs <- tr[[slice]]
+          for (i in ivec[[slice]][[1]]) 
+          {
+            cornervec[[i]] <- rgl::translate3d(cornervec[[i]], trs[1], trs[2], trs[3])
+            cornervec[[i]] <- rgl::rotate3d(cornervec[[i]], matrix = rgl::rotationMatrix(pi/fpt,rt[1],rt[2],rt[3]))
+            cornervec[[i]] <- rgl::translate3d(cornervec[[i]], -trs[1], -trs[2], -trs[3])
+            rgl::rgl.pop(id = cornerids[i])
+            cornerids[i] <- rgl::shade3d(cornervec[[i]], ...)
+          }
+          for (i in ivec[[slice]][[2]]) 
+          {
+            edgevec[[i]] <- rgl::translate3d(edgevec[[i]], trs[1], trs[2], trs[3])
+            edgevec[[i]] <- rgl::rotate3d(edgevec[[i]], matrix = rgl::rotationMatrix(pi/fpt,rt[1],rt[2],rt[3]))
+            edgevec[[i]] <- rgl::translate3d(edgevec[[i]], -trs[1], -trs[2], -trs[3])
+            rgl::rgl.pop(id = edgeids[i])
+            edgeids[i] <- rgl::shade3d(edgevec[[i]], ...)
+          }
+          for (i in ivec[[slice]][[3]]) 
+          {
+            centrevec[[i]] <- rgl::translate3d(centrevec[[i]], trs[1], trs[2], trs[3])
+            centrevec[[i]] <- rgl::rotate3d(centrevec[[i]], matrix = rgl::rotationMatrix(pi/fpt,rt[1],rt[2],rt[3]))
+            centrevec[[i]] <- rgl::translate3d(centrevec[[i]], -trs[1], -trs[2], -trs[3])
+            rgl::rgl.pop(id = centreids[i])
+            centreids[i] <- rgl::shade3d(centrevec[[i]], ...)
+          }
+        }
+        rgl::par3d(skipRedraw = FALSE)
+        if(!is.null(movie)) {
+          writeframe(dir, movie, nf, verbose)
+          nf <- nf + 1
+        }
+      }
+
+      getPO <- getPOMoveCube(mvj)
+      cornervec <- cornervec[getPO$cp]
+      cornerids <- cornerids[getPO$cp]
+      edgevec <- edgevec[getPO$ep]
+      edgeids <- edgeids[getPO$ep]
+      centrevec <- centrevec[getPO$spor]
+      centreids <- centreids[getPO$spor]
+      
     } else {
       
       ivec <- switch(EXPR = mvj,
-                     "U1" =, "U" =, "U'" =, "U3" =, "U2'" =, "U2" = list(c(1,2,3,4),c(5,6,7,8),1),
-                     "R1" =, "R" =, "R'" =, "R3" =, "R2'" =, "R2" = list(c(1,4,5,8),c(1,4,5,9),2),
-                     "F1" =, "F" =, "F'" =, "F3" =, "F2'" =, "F2" = list(c(1,2,5,6),c(1,2,6,10),3),
-                     "D1" =, "D" =, "D'" =, "D3" =, "D2'" =, "D2" = list(c(5,6,7,8),c(9,10,11,12),4),
-                     "L1" =, "L" =, "L'" =, "L3" =, "L2'" =, "L2" = list(c(2,3,6,7),c(2,3,7,11),5),
-                     "B1" =, "B" =, "B'" =, "B3" =, "B2'" =, "B2" = list(c(3,4,7,8),c(3,4,8,12),6),
-                     "E1" =, "E" =, "E'" =, "E3" =, "E2'" =, "E2" = list(numeric(0),c(1,2,3,4),c(2,3,5,6)),
-                     "M1" =, "M" =, "M'" =, "M3" =, "M2'" =, "M2" = list(numeric(0),c(6,8,10,12),c(1,3,4,6)),
-                     "S1" =, "S" =, "S'" =, "S3" =, "S2'" =, "S2" = list(numeric(0),c(5,7,9,11),c(1,2,4,5)))
+                     "U3'" =, "U" =, "U'" =, "U3" =, "U2'" =, "U2" = list(c(1,2,3,4),c(5,6,7,8),1),
+                     "R3'" =, "R" =, "R'" =, "R3" =, "R2'" =, "R2" = list(c(1,4,5,8),c(1,4,5,9),2),
+                     "F3'" =, "F" =, "F'" =, "F3" =, "F2'" =, "F2" = list(c(1,2,5,6),c(1,2,6,10),3),
+                     "D3'" =, "D" =, "D'" =, "D3" =, "D2'" =, "D2" = list(c(5,6,7,8),c(9,10,11,12),4),
+                     "L3'" =, "L" =, "L'" =, "L3" =, "L2'" =, "L2" = list(c(2,3,6,7),c(2,3,7,11),5),
+                     "B3'" =, "B" =, "B'" =, "B3" =, "B2'" =, "B2" = list(c(3,4,7,8),c(3,4,8,12),6),
+                     "E3'" =, "E" =, "E'" =, "E3" =, "E2'" =, "E2" = list(numeric(0),c(1,2,3,4),c(2,3,5,6)),
+                     "M3'" =, "M" =, "M'" =, "M3" =, "M2'" =, "M2" = list(numeric(0),c(6,8,10,12),c(1,3,4,6)),
+                     "S3'" =, "S" =, "S'" =, "S3" =, "S2'" =, "S2" = list(numeric(0),c(5,7,9,11),c(1,2,4,5)))
       
       tr <- switch(EXPR = mvj,
-                   "U1" =, "U" =, "U'" =, "U3" =, "U2'" =, "U2" = c(0, 0, -1),
-                   "R1" =, "R" =, "R'" =, "R3" =, "R2'" =, "R2" = c(-1, 0, 0),
-                   "F1" =, "F" =, "F'" =, "F3" =, "F2'" =, "F2" = c(0, 1, 0),
-                   "D1" =, "D" =, "D'" =, "D3" =, "D2'" =, "D2" = c(0, 0, 1),
-                   "L1" =, "L" =, "L'" =, "L3" =, "L2'" =, "L2" = c(1, 0, 0),
-                   "B1" =, "B" =, "B'" =, "B3" =, "B2'" =, "B2" = c(0, -1, 0),
+                   "U3'" =, "U" =, "U'" =, "U3" =, "U2'" =, "U2" = c(0, 0, -1),
+                   "R3'" =, "R" =, "R'" =, "R3" =, "R2'" =, "R2" = c(-1, 0, 0),
+                   "F3'" =, "F" =, "F'" =, "F3" =, "F2'" =, "F2" = c(0, 1, 0),
+                   "D3'" =, "D" =, "D'" =, "D3" =, "D2'" =, "D2" = c(0, 0, 1),
+                   "L3'" =, "L" =, "L'" =, "L3" =, "L2'" =, "L2" = c(1, 0, 0),
+                   "B3'" =, "B" =, "B'" =, "B3" =, "B2'" =, "B2" = c(0, -1, 0),
                    c(0, 0, 0))
       rt <- switch(EXPR = mvj,
-                   "U1" =, "U" =, "U2" =, "D'" =, "D2'" =, "D3" =, "E'" =, "E2'" =, "E3" = c(0, 0, 1),
-                   "R1" =, "R" =, "R2" =, "L'" =, "L2'" =, "L3" =, "M'" =, "M2'" =, "M3" = c(1, 0, 0),
-                   "F1" =, "F" =, "F2" =, "B'" =, "B2'" =, "B3" =, "S'" =, "S2'" =, "S3" = c(0, -1, 0),
-                   "U'" =, "U2'" =, "U3" =, "D1" =, "D" =, "D2" =, "E1" =, "E" =, "E2" = c(0, 0, -1),
-                   "R'" =, "R2'" =, "R3" =, "L1" =, "L" =, "L2" =, "M1" =, "M" =, "M2" = c(-1, 0, 0),
-                   "F'" =, "F2'" =, "F3" =, "B1" =, "B" =, "B2" =, "S1" =, "S" =, "S2" = c(0, 1, 0))
+                   "U3" =, "U" =, "U2" =, "D'" =, "D2'" =, "D3'" =, "E'" =, "E2'" =, "E3'" = c(0, 0, 1),
+                   "R3" =, "R" =, "R2" =, "L'" =, "L2'" =, "L3'" =, "M'" =, "M2'" =, "M3'" = c(1, 0, 0),
+                   "F3" =, "F" =, "F2" =, "B'" =, "B2'" =, "B3'" =, "S'" =, "S2'" =, "S3'" = c(0, -1, 0),
+                   "U'" =, "U2'" =, "U3'" =, "D3" =, "D" =, "D2" =, "E3" =, "E" =, "E2" = c(0, 0, -1),
+                   "R'" =, "R2'" =, "R3'" =, "L3" =, "L" =, "L2" =, "M3" =, "M" =, "M2" = c(-1, 0, 0),
+                   "F'" =, "F2'" =, "F3'" =, "B3" =, "B" =, "B2" =, "S3" =, "S" =, "S2" = c(0, 1, 0))
       
-      
-      ht <- fpt*(1 + as.numeric(grepl(2, mvj)))
-      for(k in 1:ht) 
+      nfrm <- fpt*(1 + grepl("2", mvj) + 2*grepl("3", mvj))
+      for(k in 1:nfrm) 
       {
         rgl::par3d(skipRedraw = TRUE)
         for (i in ivec[[1]]) 

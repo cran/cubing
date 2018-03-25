@@ -7,12 +7,13 @@
 # print.stickerCube print.cubieCube
 
 # randCube randMoves scramble       
-# rotate slice rotations plot.rotCubes ==.cube 
+# rotate wide slice rotations plot.rotCubes all.equal.cube ==.cube 
 # is.solved is.solvable parity (cyclengths) (psign)
 
 # %v% %e% %c%
-# (getSolvedCube) getMovesCube move plot.seqCubes invCube invMoves rotMoves mirMoves
-# cycleEdges cycleCorners flipEdges twistCorners
+# (getSolvedCube) getMovesCube move plot.seqCubes 
+# (convertMoves) invCube invMoves rotMoves mirMoves moveOrder
+# cycleEdges cycleCorners flipEdges twistCorners read.cubesolve
 
 ###################################################
 
@@ -273,7 +274,7 @@ scramble <- function(n = 1, state = FALSE, nm = 20, drop = TRUE,
   out
 }
 
-# rotate slice and move functions
+# rotate wide slice and move functions
 # rotate function changes the spor vector
 
 rotate <- function(aCube, rot)
@@ -287,17 +288,17 @@ rotate <- function(aCube, rot)
   
   if(is.character(rot))
   {
-    crot <- rot
+    crot <- sub("1", "", rot)
     rot <- switch(EXPR = crot,
-           "M'" = , "M3" = , "x1" = , "x" = 12, 
-           "E'" = , "E3" = , "y1" = , "y" = 2, 
-           "S'" = , "S3" = , "z1" = , "z" = 24,
-           "M" = , "M1" = , "x3" = , "x'" = 16, 
-           "E" = , "E1" = , "y3" = , "y'" = 4, 
-           "S" = , "S1" = , "z3" = , "z'" = 18,
-           "M2" = , "M2'" = , "x2" = 7, 
-           "E2" = , "E2'" = , "y2" = 3, 
-           "S2" = , "S2'" = , "z2" = 5, 
+           "Rw3'" = , "Rw" = , "Lw'" = , "Lw3" = , "M'" = , "M3" = , "x3'" = , "x" = 12, 
+           "Uw3'" = , "Uw" = , "Dw'" = , "Dw3" = , "E'" = , "E3" = , "y3'" = , "y" = 2, 
+           "Fw3'" = , "Fw" = , "Bw'" = , "Bw3" = , "S'" = , "S3" = , "z3'" = , "z" = 24,
+           "Lw3'" = , "Lw" = , "Rw'" = , "Rw3" = , "M" = , "M3'" = , "x3" = , "x'" = 16, 
+           "Dw3'" = , "Dw" = , "Uw'" = , "Uw3" = , "E" = , "E3'" = , "y3" = , "y'" = 4, 
+           "Bw3'" = , "Bw" = , "Fw'" = , "Fw3" = , "S" = , "S3'" = , "z3" = , "z'" = 18,
+           "Rw2'" = , "Rw2" = , "Lw2'" = , "Lw2" = , "M2" = , "M2'" = , "x2" = , "x2'" = 7, 
+           "Uw2'" = , "Uw2" = , "Dw2'" = , "Dw2" = , "E2" = , "E2'" = , "y2" = , "y2'" = 3, 
+           "Fw2'" = , "Fw2" = , "Bw2'" = , "Bw2" = , "S2" = , "S2'" = , "z2" = , "z2'" = 5, 
            "0" = 1,
          stop("unrecognized rotation"))
   }
@@ -309,10 +310,20 @@ rotate <- function(aCube, rot)
   aCube
 }
 
+wide <- function(aCube, wmv)
+{
+  if(!is.cubieCube(aCube)) 
+    stop("argument must be a cubieCube object")
+  wmv <- sub("([urfdlb])", "\\U\\1w", wmv, perl = TRUE)
+  wmv  <- sub("1", "", wmv)
+  rotate(aCube, wmv) %v% getWideCube(wmv)
+}
+
 slice <- function(aCube, smv)
 {
   if(!is.cubieCube(aCube)) 
     stop("argument must be a cubieCube object")
+  smv  <- sub("1", "", smv)
   rotate(aCube, smv) %v% getSliceCube(smv)
 }
 
@@ -490,17 +501,12 @@ getSolvedCube <- function(cubie = TRUE)
   out
 }
   
-getMovesCube <- function(moves, cubie = TRUE)
+getMovesCube <- function(moves = character(0), cubie = TRUE)
 {
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  } 
+  moves <- convertMoves(moves)
 
   color <- c("U", "R", "F", "D", "L", "B")
-  mvnm <- paste0(rep(color,each = 6), rep(c("","1","2","2'","3","'"), 6))
+  mvnm <- paste0(rep(color,each = 6), rep(c("","3'","2","2'","'","3"), 6))
   legal <- (moves %in% mvnm)
   if(!all(legal)) 
     stop("only URFDLB face turns allowed")
@@ -522,29 +528,27 @@ getMovesCube <- function(moves, cubie = TRUE)
   out
 }
 
-# move a cubieCube allows rotations and middle slice moves
-# uses getMoveCube getSliceCube and rotate
+# move a cubieCube allows rotations wide moves and middle slice moves
+# uses getMoveCube getWideCube getSliceCube and rotate
 
 move <- function(aCube, moves, history = FALSE)
 {
   if(!is.cubieCube(aCube))
     stop("aCube must be a cubieCube object")
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  }
+  
+  moves <- convertMoves(moves)
   
   colv <- c("U", "R", "F", "D", "L", "B")
-  colv <- paste0(rep(colv,each = 6), rep(c("","1","2","2'","3","'"), length(colv)))
+  colv <- paste0(rep(colv,each = 6), rep(c("","3'","2","2'","'","3"), length(colv)))
+  widv <- c("Uw", "Rw", "Fw", "Dw", "Lw", "Bw")
+  widv <- paste0(rep(widv,each = 6), rep(c("","3'","2","2'","'","3"), length(widv)))
   slv <- c("E", "M", "S")
-  slv <- paste0(rep(slv,each = 6), rep(c("","1","2","2'","3","'"), length(slv)))
+  slv <- paste0(rep(slv,each = 6), rep(c("","3'","2","2'","'","3"), length(slv)))
   rotv <- c("x", "y", "z")
-  rotv <- paste0(rep(rotv,each = 6), rep(c("","1","2","2'","3","'"), length(rotv)))
-  legal <- (moves %in% c(colv,slv,rotv))
+  rotv <- paste0(rep(rotv,each = 6), rep(c("","3'","2","2'","'","3"), length(rotv)))
+  legal <- (moves %in% c(colv,widv,slv,rotv))
   if(!all(legal)) 
-    stop("only URFDLBEMS face turns and xyz rotations allowed")
+    stop("only URFDLBEMS face turns URFDLB wide moves and xyz rotations allowed")
 
   if(!history) {
     for(i in 1:length(moves)) {
@@ -552,6 +556,8 @@ move <- function(aCube, moves, history = FALSE)
         aCube <- aCube %v% getMoveCube(moves[i])
       } else if(moves[i] %in% slv) {
         aCube <- rotate(aCube, moves[i]) %v% getSliceCube(moves[i])
+      } else if(moves[i] %in% widv) {
+        aCube <- rotate(aCube, moves[i]) %v% getWideCube(moves[i])
       } else {
         aCube <- rotate(aCube, moves[i])
       }
@@ -566,6 +572,8 @@ move <- function(aCube, moves, history = FALSE)
         aCubeL[[i+1]] <- aCubeL[[i]] %v% getMoveCube(moves[i])
       } else if(moves[i] %in% slv) {
         aCubeL[[i+1]] <- rotate(aCubeL[[i]], moves[i]) %v% getSliceCube(moves[i])
+      } else if(moves[i] %in% widv) {
+        aCubeL[[i+1]] <- rotate(aCubeL[[i]], moves[i]) %v% getWideCube(moves[i])
       } else {
         aCubeL[[i+1]] <- rotate(aCubeL[[i]], moves[i])
       }
@@ -611,6 +619,23 @@ plot.seqCubes <- function(x, initial = TRUE, which = 1:length(moves), ask = FALS
   invisible(x[which])
 }
 
+# move conversion
+
+convertMoves <- function(moves)
+{
+  if(!is.atomic(moves) || !is.character(moves)) 
+    stop("argument must be character vector")
+  
+  moves <- gsub("([urfdlb])", "\\U\\1w", moves, perl = TRUE)
+  if(length(moves) == 1) {
+    moves <- gsub("\\s", "", moves)
+    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
+  }
+  
+  moves <- sub("1", "", moves)
+  moves
+}
+
 # inverse cube and inverse moves
 
 invCube <- function(aCube, edges = TRUE, corners = TRUE)
@@ -636,19 +661,11 @@ invCube <- function(aCube, edges = TRUE, corners = TRUE)
 
 invMoves <- function(moves, revseq = TRUE, collapse = NULL)
 {
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  }
+  moves <- convertMoves(moves)
   
-  moves <- sub("1", "", moves)
-  moves <- sub("2'", "2", moves)
-  moves <- sub("3", "'", moves)
-  
-  mvvec <- c("U", "R", "F", "D", "L", "B", "E", "M", "S", "x", "y", "z")
-  mvvec2 <- paste0(rep(mvvec, each = 3), rep(c("","2","'"), length(mvvec)))
+  mvvec <- c("U", "R", "F", "D", "L", "B", "E", "M", "S", "x", "y", "z", 
+             "Uw", "Rw", "Fw", "Dw", "Lw", "Bw")
+  mvvec2 <- paste0(rep(mvvec, 6), rep(c("","2","3","'","2'","3'"), each = length(mvvec)))
   if(!all(moves %in% mvvec2)) stop("move not recognized")
   
   if(revseq) moves <- rev(moves)
@@ -661,8 +678,8 @@ invMoves <- function(moves, revseq = TRUE, collapse = NULL)
     }
     smv
   }
-
-  outst <- swap2(moves, mvvec, paste0(mvvec, "'"))
+  
+  outst <- swap2(moves, mvvec2[1:(length(mvvec2)/2)], mvvec2[(length(mvvec2)/2+1):length(mvvec2)])
   if(!is.null(collapse)) outst <- paste(outst, collapse = collapse)
   outst
 }
@@ -670,32 +687,25 @@ invMoves <- function(moves, revseq = TRUE, collapse = NULL)
 # rotate and mirror moves
 
 rotMoves <- function(moves, rotation = 
-  c("0","x","x1","y","y1","z","z1","x2","x2'","y2","y2'","z2","z2'","x'","x3","y'","y3","z'","z3"),
+  c("0","x","x1","x3'","y","y1","y3'","z","z1","z3'","x2","x2'","y2","y2'","z2","z2'","x'","x3","x1'","y'","y3","y1'","z'","z3","z1'"),
   invrot = FALSE, collapse = NULL)
 {
   rotation <- match.arg(rotation)
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  }
-  
-  moves <- sub("1", "", moves)
-  moves <- sub("2'", "2", moves)
-  moves <- sub("3", "'", moves)
+  rotation <- sub("1", "", rotation)
+  moves <- convertMoves(moves)
   
   if(rotation == "0") return(moves)
   if(invrot) {
     if(grepl("'$", rotation)) {
       rotation <- sub("'$", "", rotation)
     } else {
-      rotation <- sub("([^2]$)", "\\1'", rotation)
+      rotation <- sub("($)", "\\1'", rotation)
     }
   }
   
-  mvvec <- c("U", "R", "F", "D", "L", "B", "E", "M", "S", "x", "y", "z")
-  mvvec2 <- paste0(rep(mvvec, each = 3), rep(c("","2","'"), length(mvvec)))
+  mvvec <- c("U", "Uw", "R", "Rw", "F", "Fw", "D", "Dw", "L", "Lw", "B", "Bw", 
+             "E", "M", "S", "x", "y", "z")
+  mvvec2 <- paste0(rep(mvvec, each = 6), rep(c("","2","3","'","2'","3'"), length(mvvec)))
   if(!all(moves %in% mvvec2)) stop("move not recognized")
   
   swap2 <- function(mv, a, b) {
@@ -715,34 +725,35 @@ rotMoves <- function(moves, rotation =
     smv
   }
   
-  Uv <- paste0("U", c("","2","'")); Rv <- paste0("R", c("","2","'"))
-  Fv <- paste0("F", c("","2","'")); Dv <- paste0("D", c("","2","'"))
-  Lv <- paste0("L", c("","2","'")); Bv <- paste0("B", c("","2","'"))
+  Uv <- mvvec2[1:12]; Rv <- mvvec2[13:24]
+  Fv <- mvvec2[25:36]; Dv <- mvvec2[37:48]
+  Lv <- mvvec2[48:60]; Bv <- mvvec2[61:72]
+  
   outst <- switch(EXPR = rotation,
-    "y1" = ,
-    "y" = swap2(swap4(moves, c(Rv,"M","z"), c(Fv,"S","x'"), c(Lv,"M'","z'"), c(Bv,"S'","x")), 
-                c("M2", "x2"), c("S2", "z2")),
-    "x1" = ,
-    "x" = swap2(swap4(moves, c(Uv,"E","y"), c(Bv,"S'","z'"), c(Dv,"E'","y'"), c(Fv,"S","z")),
-               c("E2", "y2"), c("S2", "z2")),
-    "z1" = ,
-    "z" = swap2(swap4(moves, c(Uv,"M","x"), c(Rv,"E'","y'"), c(Dv,"M'","x'"), c(Lv,"E","y")),
-                c("M2", "x2"), c("E2", "y2")),
+    "y3'" = ,
+    "y" = swap2(swap4(moves, c(Rv,"M","z","M3'","z3'"), c(Fv,"S","x'","S3'","x3"), c(Lv,"M'","z'","M3","z3"), c(Bv,"S'","x","S3","x3'")), 
+                c("M2", "x2", "M2'", "x2'"), c("S2", "z2", "S2'", "z2'")),
+    "x3'" = ,
+    "x" = swap2(swap4(moves, c(Uv,"E","y","E3'","y3'"), c(Bv,"S'","z'","S3","z3"), c(Dv,"E'","y'","E3","y3"), c(Fv,"S","z","S3'","z3'")),
+               c("E2", "y2", "E2'", "y2'"), c("S2", "z2", "S2'", "z2'")),
+    "z3'" = ,
+    "z" = swap2(swap4(moves, c(Uv,"M","x","M3'","x3'"), c(Rv,"E'","y'","E3","y3"), c(Dv,"M'","x'","M3","x3"), c(Lv,"E","y","E3'","y3'")),
+                c("M2", "x2", "M2'", "x2'"), c("E2", "y2", "E2'", "y2'")),
     "y'" = ,
-    "y3" = swap2(swap4(moves, c(Rv,"M","z"), c(Bv,"S'","x"), c(Lv,"M'","z'"), c(Fv,"S","x'")),
-                 c("M2", "x2"), c("S2", "z2")),
+    "y3" = swap2(swap4(moves, c(Rv,"M","z","M3'","z3'"), c(Bv,"S'","x","S3","x3'"), c(Lv,"M'","z'","M3","z3"), c(Fv,"S","x'","S3'","x3")),
+                 c("M2", "x2", "M2'", "x2'"), c("S2", "z2", "S2'", "z2'")),
     "x'" = ,
-    "x3" = swap2(swap4(moves, c(Uv,"E","y"), c(Fv,"S","z"), c(Dv,"E'","y'"), c(Bv,"S'","z'")),
-                 c("E2", "y2"), c("S2", "z2")),
+    "x3" = swap2(swap4(moves, c(Uv,"E","y","E3'","y3'"), c(Fv,"S","z","S3'","z3'"), c(Dv,"E'","y'","E3","y3"), c(Bv,"S'","z'","S3","z3")),
+                 c("E2", "y2", "E2'", "y2'"), c("S2", "z2", "S2'", "z2'")),
     "z'" = ,
-    "z3" = swap2(swap4(moves, c(Uv,"M","x"), c(Lv,"E","y"), c(Dv,"M'","x'"), c(Rv,"E'","y'")),
-                 c("M2", "x2"), c("E2", "y2")),
+    "z3" = swap2(swap4(moves, c(Uv,"M","x","M3'","x3'"), c(Lv,"E","y","E3'","y3'"), c(Dv,"M'","x'","M3","x3"), c(Rv,"E'","y'","E3","y3")),
+                 c("M2", "x2", "M2'", "x2'"), c("E2", "y2", "E2'", "y2'")),
     "y2'" = ,
-    "y2" = swap2(moves, c(Rv,"M","z",Fv,"S","x'"), c(Lv,"M'","z'",Bv,"S'","x")),
+    "y2" = swap2(moves, c(Rv,"M","z","M3'","z3'",Fv,"S","x'","S3'","x3","x2","z2"), c(Lv,"M'","z'","M3","z3",Bv,"S'","x","S3","x3'","x2'","z2'")),
     "x2'" = ,
-    "x2" = swap2(moves, c(Uv,"E","y",Bv,"S'","z'"), c(Dv,"E'","y'",Fv,"S","z")),
+    "x2" = swap2(moves, c(Uv,"E","y","E3'","y3'",Bv,"S'","z'","S3","z3","y2","z2"), c(Dv,"E'","y'","E3","y3",Fv,"S","z","S3'","z3'","y2'","z2'")),
     "z2'" = ,
-    "z2" =  swap2(moves, c(Uv,"M","x",Rv,"E'","y'"), c(Dv,"M'","x'",Lv,"E","y")))
+    "z2" =  swap2(moves, c(Uv,"M","x","M3'","x3'",Rv,"E'","y'","E3","y3","x2","y2"), c(Dv,"M'","x'","M3","x3",Lv,"E","y","E3'","y3'","x2'","y2'")))
   
   if(!is.null(collapse)) outst <- paste(outst, collapse = collapse)
   outst
@@ -751,21 +762,13 @@ rotMoves <- function(moves, rotation =
 mirMoves <- function(moves, mirror = c("0","UD","DU","RL","LR","FB","BF"), collapse = NULL)
 {
   mirror <- match.arg(mirror)
-  if(!is.atomic(moves) || !is.character(moves)) 
-    stop("argument must be character vector")
-  if(length(moves) == 1) {
-    moves <- gsub("\\s", "", moves)
-    moves <- strsplit(gsub("([URFDLBEMSxyz])", " \\1", moves), " ")[[1]][-1]
-  }
-  
-  moves <- sub("1", "", moves)
-  moves <- sub("2'", "2", moves)
-  moves <- sub("3", "'", moves)
+  moves <- convertMoves(moves)
   
   if(mirror == "0") return(moves)
   
-  mvvec <- c("U", "R", "F", "D", "L", "B", "E", "M", "S", "x", "y", "z")
-  mvvec2 <- paste0(rep(mvvec, each = 3), rep(c("","2","'"), length(mvvec)))
+  mvvec <- c("U", "R", "F", "D", "L", "B", "E", "M", "S", "x", "y", "z", 
+             "Uw", "Rw", "Fw", "Dw", "Lw", "Bw")
+  mvvec2 <- paste0(rep(mvvec, 6), rep(c("","2","3","'","2'","3'"), each = length(mvvec)))
   if(!all(moves %in% mvvec2)) stop("move not recognized")
   
   swap2 <- function(mv, a, b) {
@@ -779,17 +782,51 @@ mirMoves <- function(moves, mirror = c("0","UD","DU","RL","LR","FB","BF"), colla
 
   outst <-switch(EXPR = mirror,
          "UD" = ,
-         "DU" = swap2(moves, c("R", "L", "F", "B", "U", "D", "U2", "D2", "M", "S", "x", "z"), 
-                      c("R'", "L'", "F'", "B'", "D'", "U'", "D2", "U2", "M'", "S'", "x'", "z'")),
+         "DU" = swap2(moves, 
+                      c("R", "L", "F", "B", "U", "D", "R2", "L2", "F2", "B2", "U2", "D2", "R3", "L3", "F3", "B3", "U3", "D3", 
+                        "Rw", "Lw", "Fw", "Bw", "Uw", "Dw", "Rw2", "Lw2", "Fw2", "Bw2", "Uw2", "Dw2", "Rw3", "Lw3", "Fw3", "Bw3", "Uw3", "Dw3", 
+                        "M", "M2", "M3", "S", "S2", "S3", "x", "x2", "x3", "z", "z2", "z3"), 
+                      c("R'", "L'", "F'", "B'", "D'", "U'", "R2'", "L2'", "F2'", "B2'", "D2'", "U2'", "R3'", "L3'", "F3'", "B3'", "D3'", "U3'",
+                        "Rw'", "Lw'", "Fw'", "Bw'", "Dw'", "Uw'", "Rw2'", "Lw2'", "Fw2'", "Bw2'", "Dw2'", "Uw2'", "Rw3'", "Lw3'", "Fw3'", "Bw3'", "Dw3'", "Uw3'",
+                        "M'", "M2'", "M3'", "S'", "S2'", "S3'", "x'", "x2'", "x3'", "z'", "z2'", "z3'")),
          "RL" = ,
-         "LR" = swap2(moves, c("F", "B", "U", "D", "R", "L", "R2", "L2", "E", "S", "y", "z"), 
-                      c("F'", "B'", "U'", "D'", "L'", "R'", "L2", "R2", "E'", "S'", "y'", "z'")),
+         "LR" = swap2(moves, 
+                      c("F", "B", "U", "D", "R", "L", "F2", "B2", "U2", "D2", "R2", "L2", "F3", "B3", "U3", "D3", "R3", "L3",
+                        "Fw", "Bw", "Uw", "Dw", "Rw", "Lw", "Fw2", "Bw2", "Uw2", "Dw2", "Rw2", "Lw2", "Fw3", "Bw3", "Uw3", "Dw3", "Rw3", "Lw3",
+                        "E", "E2", "E3", "S", "S2", "S3", "y", "y2", "y3", "z", "z2", "z3"), 
+                      c("F'", "B'", "U'", "D'", "L'", "R'", "F2'", "B2'", "U2'", "D2'", "L2'", "R2'", "F3'", "B3'", "U3'", "D3'", "L3'", "R3'",
+                        "Fw'", "Bw'", "Uw'", "Dw'", "Lw'", "Rw'", "Fw2'", "Bw2'", "Uw2'", "Dw2'", "Lw2'", "Rw2'", "Fw3'", "Bw3'", "Uw3'", "Dw3'", "Lw3'", "Rw3'",
+                        "E'", "E2'", "E3'", "S'", "S2'", "S3'", "y'", "y2'", "y3'", "z'", "z2'", "z3'")),
          "FB" = ,
-         "BF" = swap2(moves, c("U", "D", "R", "L", "F", "B", "F2", "B2", "M", "E", "x", "y"), 
-                      c("U'", "D'", "R'", "L'", "B'", "F'", "B2", "F2", "M'", "E'", "x'", "y'")))
+         "BF" = swap2(moves, 
+                      c("U", "D", "R", "L", "F", "B", "U2", "D2", "R2", "L2", "F2", "B2", "U3", "D3", "R3", "L3", "F3", "B3",
+                        "Uw", "Dw", "Rw", "Lw", "Fw", "Bw", "Uw2", "Dw2", "Rw2", "Lw2", "Fw2", "Bw2", "Uw3", "Dw3", "Rw3", "Lw3", "Fw3", "Bw3",
+                        "M", "M2", "M3", "E", "E2", "E3", "x", "x2", "x3", "y", "y2", "y3"), 
+                      c("U'", "D'", "R'", "L'", "B'", "F'", "U2'", "D2'", "R2'", "L2'", "B2'", "F2'", "U3'", "D3'", "R3'", "L3'", "B3'", "F3'",
+                        "Uw'", "Dw'", "Rw'", "Lw'", "Bw'", "Fw'", "Uw2'", "Dw2'", "Rw2'", "Lw2'", "Bw2'", "Fw2'", "Uw3'", "Dw3'", "Rw3'", "Lw3'", "Bw3'", "Fw3'",
+                        "M'", "M2'", "M3'", "E'", "E2'", "E3'", "x'", "x2'", "x3'", "y'", "y2'", "y3'")))
   
   if(!is.null(collapse)) outst <- paste(outst, collapse = collapse)
   outst
+}
+
+moveOrder <- function(moves)
+{
+  moves <- convertMoves(moves)
+  if(length(moves) == 0) return(0L)
+  
+  color <- c("U", "R", "F", "D", "L", "B")
+  mvnm <- paste0(rep(color,each = 6), rep(c("","3'","2","2'","3","'"), 6))
+  legal <- (moves %in% mvnm)
+  if(!all(legal)) 
+    stop("only URFDLB face turns allowed")
+  
+  curr <- mvcube <- getMovesCube(moves)
+  for(k in 1:1260) {
+    if(is.solved(curr)) return(k)
+    curr <- curr %v% mvcube
+  }
+  stop("cannot determine order")
 }
 
 # permuation cycles of edges and corners
@@ -890,3 +927,77 @@ twistCorners <- function(aCube, clock = numeric(0), anti = numeric(0))
   aCube$co[anti] <- (aCube$co[anti] + 2L) %% 3L
   aCube
 }
+
+read.cubesolve <- function(n, warn = FALSE)
+{
+  Sswap <- function(mv) {
+    smv <- mv
+    smv[mv == "S" | mv == "S1"] <- "S'"
+    smv[mv == "S'" | mv == "S3"] <- "S"
+    smv
+  }
+  
+  if(length(n) != 1 || !is.numeric(n))
+    stop("n must be a single integer value")
+  pg <- readLines(paste0("http://www.cubesolv.es/solve/", as.integer(n)))
+  
+  h2 <- grep("<h2>", pg)
+  if(length(h2) == 0) {
+    if(warn) {
+      warning("entry does not seem to exist")
+      return(list(scramble = character(0), solution = character(0), description = ""))
+    } else {
+      stop("entry does not seem to exist")
+    }
+  }
+  
+  h2e <- grep("</h2>", pg)
+  if(length(h2) != 1 || length(h2e) != 1) 
+    stop("cannot extract header information")
+  
+  hd <- pg[(h2+1):(h2e-1)]
+  hd <- gsub("<a href='?https://www.worldcubeassociation.org/results/.* target='_blank'>([^<]*)</a>", "\\1", hd)
+  hd <- trimws(paste(hd, collapse = ""))
+  
+  sc <- grep("Scramble", pg)
+  if(length(sc) == 1) {
+    sce <- grep("</div>", pg)
+    sce <- sce[sce > sc][1]
+  }
+  
+  sol <- grep("Solution", pg)
+  if(length(sol) == 1) {
+    sole <- grep("</div>", pg)
+    sole <- sole[sole > sol][1]
+  } 
+  
+  if(length(sc) == 1) {
+    scd <- paste(pg[(sc+1):sce], collapse = "")
+    scd <- gsub("<br>", "", gsub("&#x27;", "'", scd))
+    scd <- trimws(gsub("<div class=\"algorithm well\">([^<]*)</div>", "\\1", scd))
+    scd <- gsub("[\\(\\)]", "", scd)
+    scd <- strsplit(scd, "\\s+")[[1]]
+  } else if(length(sc) == 0) {
+    scd <- character(0)
+  } else stop("more than one scramble")
+  
+  if(length(sol) == 1) {
+    sold <- paste(gsub("//.*", "", pg[(sol+1):sole]), collapse = "")
+    sold <- gsub("<br>", "", gsub("&#x27;", "'", sold))
+    sold <- gsub("<span class=\"comment\">[^<]*</span>", "", sold)
+    sold <- trimws(gsub("<div class=\"algorithm well\">([^<]*)</div>", "\\1", sold))
+  
+    for(i in 1:9) 
+      sold <- gsub(paste0("\\(([^\\)]*)\\)",i), paste(rep("\\1", i), collapse = " "), sold)
+    sold <- gsub("[\\(\\)]", "", sold)
+    if(grepl("\\]|\\[", sold))
+      warning("commutator and conjugate notation is not implemented")
+    sold <- Sswap(strsplit(sold, "\\s+")[[1]])
+  } else if(length(sol) == 0) {
+    sold <- character(0)
+  } else stop("more than one solution")
+  
+  list(scramble = scd, solution = sold, description = hd)
+}
+
+
