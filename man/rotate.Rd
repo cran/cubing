@@ -15,18 +15,19 @@ rotate(aCube, rot)
 \arguments{
   \item{aCube}{A cubieCube object.}
   \item{smv}{A single string giving a middle slice move. Must be one of
-     E E1 E2 E2' E3 E' M M1 M2 M2' M3 M' S S1 S2 S2' S3 S'.}
+     E E1 E' E1' E2 E2' E3 E3' M M1 M' M1' M2 M2' M3 M3' S S1 S' S1' S2 
+	 S2' S3 S3'.}
   \item{wmv}{A single string giving a wide move. Lower case letters and w
      notation are both allowed. For turns on the U face must be one of 
-	 Uw u Uw1 u1 Uw2 u2 Uw2' u2' Uw' u' Uw3 u3, and similarly for the
-     R F D L B faces.}
+	 Uw u Uw1 u1 Uw' u' Uw1' u1' Uw2 u2 Uw2' u2' Uw3 u3 Uw3' u3', and 
+	 similarly for the R F D L B faces.}
   \item{rot}{A rotation. This can be specified using an integer or a character
     string. If an integer, must be a number between 1 and 24 representing one
 	of the 24 possible rotations in space. The number 1 is the no rotation case.
-	If a character string, must be one of 0 x x1 x2 x2' x3 x' y y1 y2 y2' y3 y' 
-	z z1 z2 z2' z3 z' where the 0 character string represents no rotation. 
-	Character strings correspond only to the 10 rotations around the 
-	the x, y and z axes (including the no rotation case).}
+	If a character string, must be one of 0 x x1 x' x1' x2 x2' x3 x3' y y1 y' y1' 
+	y2 y2' y3 y3' z z1 z' z1' z2 z2' z3 z3' where the 0 character string represents 
+	no rotation. Character strings correspond only to the 10 distinct rotations 
+	around the the x, y and z axes (including the no rotation case).}
 }
 \details{
   These functions are used internally by the \code{move} function for

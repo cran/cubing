@@ -22,7 +22,7 @@ scramble(n = 1, state = FALSE, nm = 20, drop = TRUE, type = c("KB", "ZT",
     is equal to one.}
   \item{spor}{The spatial orientation vector that is added to each simulated cubieCube.}
   \item{nm}{The number of moves in the move sequence or the scramble. Ignored for
-    scrambles if \code{state} is \code{TRUE}.}
+    \code{scramble} if \code{state} is \code{TRUE}.}
   \item{state}{If \code{FALSE} (the default), use a random moves scramble. If
     \code{TRUE}, use a random state scramble.}
   \item{type}{The type of solver used for the random state scramble. This and all
@@ -37,8 +37,8 @@ scramble(n = 1, state = FALSE, nm = 20, drop = TRUE, type = c("KB", "ZT",
   construction is equally likely. The resulting cube may or may not be solvable: 
   the chance of it being solvable is only 1 in 12.
 
-  The \code{randMoves} function generates a random move sequence using URFDLB moves,
-  restricted so that you cannot get two moves in a row on the same face, or
+  The \code{randMoves} function generates a random move sequence using URFDLB face 
+  turns, restricted so that you cannot get two moves in a row on the same face, or
   three moves in a row on opposing faces. An alternative way of constructing a
   random cube is \code{getMovesCube(randMoves())}. If \code{nm} is 20 or more
   then every solvable state has a non-zero chance of occuring, but the states

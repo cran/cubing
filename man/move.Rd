@@ -15,7 +15,8 @@ move(aCube, moves, history = FALSE)
 \arguments{
   \item{aCube}{A cubieCube object.}
   \item{moves}{A move sequence; either a single string or a character vector with 
-    one element per move. Can include URFDLBEMS face turns and xyz rotations.}
+    one element per move. Can include URFDLBEMS face turns, URFDLB wide turns and 
+	xyz rotations.}
   \item{history}{If \code{TRUE} the output is a list containing the initial cube 
     state and every subsequent cube state created during the move sequence. 
 	If \code{FALSE} (the default) only the final cube state is returned.}	
@@ -40,21 +41,22 @@ move(aCube, moves, history = FALSE)
 }
 \details{
   By default \code{move} gives the result of applying the move sequence
-  \code{moves} to the cube \code{aCube}. All rotations xyz and face turns
-  URFDLBEMS are allowed, but wide moves are not allowed and must be manually 
-  converted. Moves specifications such as U U1 U2 U2' U' U3 and rotation specifications 
-  such as x1 x x2 x2' x' x3 are all allowed. If \code{moves} is a single string,
-  it may contain any amount of white space.
+  \code{moves} to the cube \code{aCube}. All rotations xyz, face turns
+  URFDLBEMS, and wide moves URFDLB are allowed. Moves specifications such 
+  as U U1 U' U1' U2 U2' U3 U3' and rotation specifications such as x x1 x' 
+  x1' x2 x2' x3 x3' are all allowed. For wide moves, lower case lettering 
+  and w notation are both allowed, so u2 and Uw2 are equivalent. If 
+  \code{moves} is a single string, it may contain any amount of white space.
   
   The definition of the E M S middle slice moves is respectively given by D'Uy' L'Rx' B'Fz'.
   In particular, the S slice direction is different to what you may find elsewhere;
-  the definition used for S in this package is mathematically consistent with E and M. 
+  the definition used for S in this package is consistent with the rotation directions. 
   
   When \code{history} is \code{TRUE} a list is created of class seqCubes. The
-  list contains cubieCube ojects. The length of the list is the number of moves 
+  list contains cubieCube objects. The length of the list is the number of moves 
   plus one, where the first element of the list is the original cube.
 
-  The \code{plot.seqCubes} functions plots a list of class seqCubes. It can be
+  The \code{plot.seqCubes} function plots a list of class seqCubes. It can be
   regarded and a 2D version of the animate function. For permanent recording 
   of the 2D plots for the move sequence, it is helpful to open a multiple page 
   graphing device such as pdf. A pdf file can then be created and used as a flick 

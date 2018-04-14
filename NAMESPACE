@@ -1,7 +1,7 @@
 useDynLib(cubing, .registration = TRUE)
 
 export(stickerCube, cubieCube, is.stickerCube, is.cubieCube, as.stickerCube, as.cubieCube,
-  randCube, randMoves, scramble, rotate, slice, rotations,
+  randCube, randMoves, scramble, rotate, slice, wide, rotations,
   is.solved, is.solvable, parity, "%v%", "%e%", "%c%",
   getMovesCube, move, invCube, invMoves, rotMoves, mirMoves, moveOrder,
   cycleEdges, cycleCorners, flipEdges, twistCorners, read.cubesolve,

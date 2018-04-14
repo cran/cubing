@@ -53,10 +53,10 @@ cycleCorners(aCube, cycle, right = TRUE, orient = TRUE)
   
   Two binary operators within the package that also impact solvability are \code{\%e\%} and 
   \code{\%c\%}, which are composition operators for only edges and only corners respectively.
-  We use \code{\%e\%} in the following text, but exactly the same reasoning applies to \code{\%c\%}. 
   If two cubes A and B are solvable, then A \code{\%e\%} B may be unsolvable because the edge 
   and corner permuations may be of different sign; the orientations will always remain solvable.
   It is also possibe for A \code{\%e\%} B to be solvable but B \code{\%e\%} A to be unsolvable.
+  The same reasoning applies to \code{\%c\%}. 
   
   In detail: if A and B have odd permutations, then both A \code{\%e\%} B and B \code{\%e\%} A
   become unsolvable. If A and B have even permutations, then both A \code{\%e\%} B and 

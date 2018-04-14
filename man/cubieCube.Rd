@@ -33,8 +33,8 @@ is.cubieCube(aCube)
     must contain only the letters URFLBD, representing the color on each face, and may contain 
 	any amount of white space. There must be 9 occurrences of each letter, or 8 occurrences if 
 	the centre stickers are omitted. A character vector can also be given instead of a character 
-	string, with one element for each letter. See the package vignette. The sticker template 
-	can be displayed using the code at the end of the Examples section below.}
+	string, with one element for each letter. The sticker template can be displayed using the 
+	code at the end of the Examples section below.}
   \item{aCube}{Any object.}
 }
 \details{
@@ -49,10 +49,11 @@ is.cubieCube(aCube)
   A cubieCube is a list with five vector elements. The first four are cp ep co eo for the
   corner permuation, edge permuation, corner orientation, and edge orientation. The fifth, spor,
   tracks the fixed centres and therefore represents the spatial orientation. It exists to avoid
-  recoloring the cube when plotting it after a rotation or middle slice move. The
-  stickerCube object does not hold information on spatial orientation: if
-  you convert to a stickerCube and then convert back to a cubieCube, the spor vector will be 
-  reset to \code{1:6}.
+  recoloring the cube when plotting it after a rotation, middle slice move or wide move. 
+  
+  A stickerCube object does not hold information on spatial orientation, therefore if
+  you convert a cubieCube to a stickerCube, and then convert back to a cubieCube, the 
+  spor vector will be reset to \code{1:6}.
   
   The \code{cubieCube} function contains a large amount of bulletproofing to ensure the cube
   has valid cubies that are stickered correctly, but the cube may or may not be solvable. Both 

@@ -10,8 +10,8 @@ getMovesCube(moves = character(0), cubie = TRUE)
 }
 \arguments{
   \item{moves}{A move sequence; either a single string or a character vector with 
-    one element per move. Can include URFDLB face turns. Cannot include rotations
-	or middle slice moves.}
+    one element per move. Can include URFDLB face turns. Cannot include rotations, 
+	middle slice moves or wide moves.}
   \item{cubie}{If \code{FALSE}, produce a stickerCube rather than a cubieCube.}
 }
 \details{
@@ -22,9 +22,8 @@ getMovesCube(moves = character(0), cubie = TRUE)
   is the solved state then this is just \code{getMovesCube(m)}. If \code{m} represents
   a scramble sequence, then \code{getMovesCube(m)} is the scrambled cube state.
 
-  The move sequence cannot include rotations because rotations cannot be expressed via
-  post-multiplication. To implement rotations, see the \code{move} and \code{rotate}
-  functions.  
+  The move sequence cannot include rotations, middle slice moves or wide moves because 
+  these cannot be expressed via post-multiplication. To implement these moves, see the \code{move} and \code{rotate} functions.  
 }
 \value{
   A cube object.

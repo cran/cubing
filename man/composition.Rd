@@ -16,6 +16,8 @@ aCube \%c\% bCube
   \item{bCube}{A cubieCube object.}
 }
 \details{
+  Both arguments must be cubieCube objects, not stickerCube objects.
+  
   If A and B are cubes then A \code{\%v\%} B is the composition 
   (or multiplication) of A and B. This means that if \code{a} and 
   \code{b} are move sequences that produce A and B respectively from
@@ -28,10 +30,6 @@ aCube \%c\% bCube
   Every 3x3x3 cube A has a unique inverse cube A' where AA' 
   and A'A are both equal to \code{I}. The inverse cube can be calculated 
   using the \code{invCube} function.  
-
-  Both objects must be cubieCube objects, not stickerCube objects; unlike other functions
-  in the package that require a specific cube type, no expicit error checking is performed 
-  by these operators.
 
   The \code{\%e\%} and \code{\%c\%} operators are similar to \code{\%v\%} but they compose 
   only the edges and corners respectively. Use of these operators may create an unsolvable 

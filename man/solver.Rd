@@ -7,8 +7,8 @@
 \usage{
 solver(aCube, tCube, type = c("KB", "ZT", "TF"), inv = FALSE, 
     maxMoves = switch(type, KB = 24, ZT = 20, TF = 16), bound = 
-	TRUE, collapse = NULL, divide = FALSE, history = FALSE, 
-	verbose = FALSE) 
+    TRUE, collapse = NULL, divide = FALSE, history = FALSE, 
+    verbose = FALSE) 
 }
 \arguments{
   \item{aCube}{A cubieCube object giving the cube to be solved. 
@@ -33,7 +33,7 @@ solver(aCube, tCube, type = c("KB", "ZT", "TF"), inv = FALSE,
 	vector of moves. If \code{collapse} is the empty string then a single
 	string with no separator is returned.}
   \item{divide}{If \code{TRUE}, a period symbol is placed between the phases
-    of the search algorithm and the looks of the last layer.}
+    of the search algorithm.}
   \item{history}{If \code{TRUE} the solver returns a list where the second element 
     gives a matrix object that provides information on the history of the search 
 	algorithm. Mainly used for debugging.}

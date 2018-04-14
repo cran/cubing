@@ -16,7 +16,7 @@
 \SweaveOpts{concordance=TRUE}
 
 \title{An Introduction to the Cubing Package}
-\author{Alec Stephenson \\ Melbourne, Australia  \\ Version 1.0-3, 2018-03-25}
+\author{Alec Stephenson \\ Melbourne, Australia  \\ Version 1.0-4, 2018-04-14}
 \date{December 6, 2017}
 \maketitle
 
@@ -30,7 +30,7 @@ This document gives an brief non-technical introduction to the R package \textbf
 
 The definitive help for any function can be seen by typing a question mark followed by the function name, such as \texttt{?move} for the \texttt{move} function. An exception is for the operator \texttt{\%v\%}, which must also be surrounded by quotation marks, so use \texttt{?"\%v\%"} to read the help on that. The help file will be more detailed than the information given in this document. Using \texttt{examples(move)} will run the code in the examples section of the help file for the \texttt{move} function.
 
-I will always use double quote marks rather than single quote marks when using character strings, because a single quote mark is used for prime moves such as \texttt{U\textquotesingle} and \texttt{F\textquotesingle}. This means that if you use single quote marks, you will need to escape the prime with a backslash. Double quote marks are therefore simpler to use. It is assumed that you know standard move notation for cubing. The package also accepts variants for input, for example \texttt{U} \texttt{U1} \texttt{U\textquotesingle} \texttt{U1\textquotesingle} \texttt{U3} \texttt{U3\textquotesingle} \texttt{U2} and \texttt{U2\textquotesingle} are all valid moves. 
+I will always use double quote marks rather than single quote marks when using character strings, because a single quote mark is used for prime moves such as \texttt{U\textquotesingle} and \texttt{F\textquotesingle}. This means that if you use single quote marks, you will need to escape the prime with a backslash. Double quote marks are therefore simpler to use. It is assumed that you know standard move notation for cubing. The package also accepts variants for input, for example \texttt{U} \texttt{U1} \texttt{U\textquotesingle} \texttt{U1\textquotesingle} \texttt{U3} \texttt{U3\textquotesingle} \texttt{U2} and \texttt{U2\textquotesingle} are all valid moves, and \texttt{x} \texttt{x1} \texttt{x\textquotesingle} \texttt{x1\textquotesingle} \texttt{x3} \texttt{x3\textquotesingle} \texttt{x2} and \texttt{x2\textquotesingle} are all valid rotations. 
 
 The move \texttt{U3} represents three quarter-turns in the clockwise direction, which gives the same cube as the anti-clockwise quarter turn \texttt{U\textquotesingle} (or \texttt{U1\textquotesingle}), but the animations will display the different turn directions. This similarly applies to the \texttt{U3\textquotesingle} and \texttt{U} (or \texttt{U1}) moves, and to the half-turn moves \texttt{U2\textquotesingle} and \texttt{U2}.
 
@@ -157,7 +157,7 @@ rCube <- rCube %v% aCube
 
 Here we generate a random cube \texttt{rCube} and apply the move sequence R U\textquotesingle\  F2 using the cube composition\footnote{For those that know about matrices, the cube composition operator \texttt{\%v\%} works in a similar way to the matrix multiplication operator \texttt{\%*\%}. Both operators are associative but not commutative. The solved state corresponds to the identity matrix, and each cube has a unique inverse given by the \texttt{invCube} function.} operator \texttt{\%v\%}.
 
-So \texttt{getMovesCube} produces a cube representation of a move sequence that can then be applied to any cube. A disadvantage of this approach is that the move sequence cannot include whole cube rotations, because rotations do not work this way. If you want to apply a move sequence that includes rotations, you will need to use the \texttt{move} function: see Section \ref{subsect:move}.  
+So \texttt{getMovesCube} produces a cube representation of a move sequence that can then be applied to any cube. This approach can only be used for U R F D L B face turns. If you want to apply a move sequence that includes rotations, middle slice moves, or wide moves, you will need to use the \texttt{move} function: see Section \ref{subsect:move}.  
 
 \subsection{Creating Even More Pretty Patterns}
 
@@ -268,16 +268,16 @@ A stickerCube object is just a named vector, where the names correspond to the s
 
 A cubieCube object is a list giving vector components for the corner permutation (cp), corner orientation (co), edge permutation (ep) and edge orientation (eo). The names within each vector represent the locations of corners and edges. For orientation, a zero represents a correctly oriented\footnote{We use the most common definition for orientation, so a correctly oriented edge can be solved in <U R F2 D L B2> and a correctly oriented corner can be solved in <U R2 F2 D L2 B2>.} cubie, a one represents a flipped edge or a clockwise twisted corner, and a 2 represents an anti-clockwise twisted corner.
 
-A cubieCube object also contains a spor (spatial orientation) vector. This tracks the location of the fixed centre pieces. It is changed only when a whole cube rotation is performed, or when a middle slice (E, M or S) move is performed. The purpose of the spor component is to ensure that the colors used for plotting are consistent before and after rotations. If the component did not exist, then the cube plots would need to be recolored\footnote{The stickerCube representation does not contain spatial orientation information because the U5 value must be U, the R5 value must be R, and so on.} after rotations.
+A cubieCube object also contains a spor (spatial orientation) vector. This tracks the location of the fixed centre pieces. It is changed only when a whole cube rotation (x, y and z), middle slice move (E, M and S) or wide move (Uw, Rw, Fw, Dw, Lw and Bw) is performed. The purpose of the spor component is to ensure that the colors used for plotting are consistent before and after these moves. If the component did not exist, then the cube plots would need\footnote{The stickerCube representation does not contain spatial orientation information because the U5 value must be U, the R5 value must be R, and so on.} to be recolored.
 
 \subsection{Solvability}
 \label{subsect:solve}
 
-An important point about our cube objects is that they are designed to hold both solvable and unsolvable cubes. If you just take the cubies of your cube apart and reconstruct it, then the cube may not be solvable, but you can still represent it with a stickerCube or a cubieCube. It is actually very useful to be able to represent unsolvable cubes. Even the solver can be usefully applied to an unsolvable cube, if the target state is also unsolvable (see Section \ref{sect:solvers}).
+An important point about our cube objects is that they are designed to hold both solvable and unsolvable cubes. If you just take the cubies of your cube apart and reconstruct it, then the cube may not be solvable, but you can still represent it with a stickerCube or a cubieCube. The ability to represent unsolvable cubes can be useful. For example, the solver can be usefully applied to an unsolvable cube, if the target state is also unsolvable (see Section \ref{sect:solvers}).
 
 The functions \texttt{is.solvable} and \texttt{is.solved} test for solvable and solved cubes, and by default simply return \texttt{TRUE} or \texttt{FALSE}, but if the argument \texttt{split} is \texttt{TRUE} they give a little more information.
 
-There is quite a lot happening in the code line below, but the output is just a whole number. If the argument \texttt{solvable} is set to \texttt{FALSE}, then \texttt{randCube} will produce a cube (or list of cubes) that is randomly constructed from the cubies but is not necessarily solvable. The R function \texttt{sapply} applies another function, in this case \texttt{is.solvable}, to every element of a list, and the \texttt{sum} function will add up the number of \texttt{TRUE} results. 
+There is a lot happening in the code line below, but the output is just a whole number. If the argument \texttt{solvable} is set to \texttt{FALSE}, then \texttt{randCube} will produce a cube (or list of cubes) that is randomly constructed from the cubies but is not necessarily solvable. The R function \texttt{sapply} applies another function, in this case \texttt{is.solvable}, to every element of a list, and the \texttt{sum} function will add up the number of \texttt{TRUE} results. 
 
 The code line therefore simulates $100$ random cube constructions, and works out how many of those $100$ are solvable. This number is random, but the chance of any simulated cube being solvable is 1 in 12, so we expect\footnote{Formally, the result is a binomial random variable with parameters $n=100$ and $p=1/12$, so the expectation is $np = 8.3$.} it to be close to $100/12 = 8.3$.
 
@@ -393,7 +393,7 @@ The \texttt{plot} and \texttt{plot3D} functions produce 2D and interactive 3D pl
 \subsection{Flick Books}
 \label{subsect:flick}
 
-The \texttt{move} function by default returns the result of the move sequence \texttt{mv} applied to the cube \texttt{aCube}. To produce the flick book, we need to call the \texttt{move} function with the argument \texttt{history} set to \texttt{TRUE}, which will then return a list of every cube obtained during the move sequence. The returned list also stores the move sequence as an R attribute. The length of the list is the length of the move sequence plus one, where the one accounts for the original cube. The entire move sequence can then be plotted using the \texttt{plot}\footnote{For help on this function use \texttt{?plot.seqCubes}.} function.
+The \texttt{move} function by default returns the result of the move sequence \texttt{mv} applied to the cube \texttt{aCube}. To produce the flick book, we need to call the \texttt{move} function with the argument \texttt{history} set to \texttt{TRUE}, which will then return a list of every cube obtained during the move sequence. The length of the list is the length of the move sequence plus one, where the one accounts for the original cube. The entire move sequence can then be plotted using the \texttt{plot}\footnote{For help on this function use \texttt{?plot.seqCubes}.} function.
 
 <<echo=TRUE,eval=FALSE>>=
 res.seq <- move(aCube, mv, history = TRUE)
@@ -418,7 +418,7 @@ dev.off()
 \subsection{Animations}
 \label{subsect:an}
 
-Animations can be produced using the \texttt{animate} function. There are a large number of arguments that control the visual display and the number of frames used for each turn or whole cube rotation. Middle slice turns (E, M and S) can also be made. See \texttt{?animate} for more details. For an animation you just need to call the function with the starting cube and the move sequence.
+Animations can be produced using the \texttt{animate} function. There are a large number of arguments that control the visual display and the number of frames used for each turn or whole cube rotation. Middle slice turns (E, M and S) and wide moves (Uw, Rw, Fw, Dw, Lw and Bw) can also be made. See \texttt{?animate} for more details. For an animation you just need to call the function with the starting cube and the move sequence.
 
 <<echo=TRUE,eval=FALSE>>=
 animate(aCube, mv)
@@ -463,7 +463,7 @@ The loop is over the id numbers on the cube solves website. The data is read wit
 \section{Rotations and Equivalence}
 \label{sect:roteq}
 
-The are nine rotation moves given by \texttt{x} \texttt{y} \texttt{z} \texttt{x2} \texttt{y2} \texttt{z2} \texttt{x\textquotesingle} \texttt{y\textquotesingle} and \texttt{z\textquotesingle}, but there are more than nine spatial orientations of the cube. This is because rotations such as \texttt{x\textquotesingle y} cannot be reduced to a single rotation move. Any cube can be rotated\footnote{There is also a mathematical operation called a reflection which increases the $24$ to $48$, but we do not consider reflections here. You can also consider the inverse cube, giving $96$ cases. The cases may not all be distinct (accounting for recoloring) due to symmetries.} in one of $24$ ways, including the original cube which corresponds to not performing any rotation.
+The are nine distinct rotation moves given by \texttt{x} \texttt{y} \texttt{z} \texttt{x2} \texttt{y2} \texttt{z2} \texttt{x\textquotesingle} \texttt{y\textquotesingle} and \texttt{z\textquotesingle}, but there are more than nine spatial orientations of the cube. This is because rotations such as \texttt{x\textquotesingle y} cannot be reduced to a single rotation move. Any cube can be rotated\footnote{There is also a mathematical operation called a reflection which increases the $24$ to $48$, but we do not consider reflections here. You can also consider the inverse cube, giving $96$ cases. The cases may not all be distinct due to symmetries.} in one of $24$ ways, including the original cube which corresponds to not performing any rotation.
 
 The function \texttt{rotations} performs all $24$ rotations of a cube and therefore returns a list of $24$ cubes. The first element of the list is the original cube. The output of the \texttt{rotations} function can then be passed to the \texttt{plot} function\footnote{For help on this function use \texttt{?plot.rotCubes}.} to display 2D plots of all $24$ rotations.
 The following code provides an example with a random cube.
@@ -534,7 +534,7 @@ round(quantile(tp$time/10^6, prob = c(0,.01,seq(.05,.95,.05),.99,1)))
   32   35   37   39   43   48   57   72   86  125  415 
 \end{verbatim}
 
-The \texttt{solver} function has a \texttt{type} argument to specify the type of solver. The default is \texttt{"KB"}, which is the Kociemba solver. Alternative values\footnote{If you read the code you may notice that some of it corresponds to ZZ and CFOP methods and last layer algorithms. My intention was to include pseudo-human solvers for ZZ and CFOP, but they were unfinished when I reached my self-imposed deadline for the package release. I left some of this code in the package for future development. Maybe next year.} are \texttt{"ZT"} for the Zemdegs-Twist\footnote{Named after a corner twist from Australian speedcuber Felix Zemdegs.} solver and \texttt{"TF"} for the Twist-Flip solver.
+The \texttt{solver} function has a \texttt{type} argument to specify the type of solver. The default is \texttt{"KB"}, which is the Kociemba solver. Alternative values\footnote{If you read the code you may notice that some of it corresponds to ZZ and CFOP methods and last layer algorithms. My intention was to include pseudo-human solvers for ZZ and CFOP, but they were unfinished when I reached my self-imposed deadline for the package release. I left some of this code in the package for future development.} are \texttt{"ZT"} for the Zemdegs-Twist\footnote{Named after a corner twist from Australian speedcuber Felix Zemdegs.} solver and \texttt{"TF"} for the Twist-Flip solver.
 
 In the Zemdegs-Twist solver, the move sequence solves the cube except for corner orientation, and a twist vector (an R attribute for the move sequence) tells you how to twist the corners to finally solve the cube. The Zemdegs-Twist solver can be used by the \texttt{scramble} function, in which case the corner twists are performed as the first action of the scramble. 
 

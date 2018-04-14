@@ -33,8 +33,8 @@ is.stickerCube(aCube)
     must contain only the letters URFLBD, representing the color on each face, and may contain 
 	any amount of white space. There must be 9 occurrences of each letter, or 8 occurrences if 
 	the centre stickers are omitted. A character vector can also be given instead of a character 
-	string, with one element for each letter. See the package vignette. The sticker template 
-	can be displayed using the code at the end of the Examples section below.}
+	string, with one element for each letter. The sticker template can be displayed using the 
+	code at the end of the Examples section below.}
   \item{aCube}{Any object.}
 }
 \details{

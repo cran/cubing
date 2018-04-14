@@ -28,7 +28,8 @@ getMovesPattern(pattern = c("Solved","Superflip","EasyCheckerboard","Wire","Plus
 \details{
   This function is mainly for internal use. It is used by the functions
   \code{getCubieCube} and \code{getStickerCube} to produce patterned cubes
-  via \code{getMovesCube}.
+  via \code{getMovesCube}. The returned move sequence contains only URFDLB
+  face turns.
 }
 \value{
   A character vector of moves. 
