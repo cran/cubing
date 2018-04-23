@@ -296,11 +296,11 @@ kociemba <- function(init, maxDepth = 26, verbose = FALSE)
   search[seq(1, 13*31, 31)] <- c(1L, 0L, init, -1L, -1L)
   search[11*31 + 2] <- 1L
   
-  sout <- .C("kociemba1", 
+  sout <- .C(kociemba1, 
              mt_co, mt_eo, mt_e4b, mt_cp, mt_e4t, mt_eMSp, mt_eEp,
              pt_eoXeEb, pt_coXeEb, pt_cpXeEp, pt_eMSpXeEp,
              tt_eMSp, tt_eMSp_Map,
-             as.integer(maxDepth), as.integer(verbose),
+             as.integer(maxDepth), as.logical(verbose),
              search = search,
              depthtotal = integer(1),
              depthA = integer(1))[c("search","depthtotal","depthA")]
@@ -326,11 +326,11 @@ zemtwist <- function(init, maxDepth = 22, verbose = FALSE)
   search[seq(1, 13*31, 31)] <- c(1L, 0L, init, -1L, -1L)
   search[11*31 + 2] <- 1L
   
-  sout <- .C("zemtwist1", 
+  sout <- .C(zemtwist1, 
              mt_co, mt_eo, mt_e4b, mt_cp, mt_e4t, mt_eMSp, mt_eEp,
              pt_eoXeEb, pt_cpXeEp, pt_eMSpXeEp,
              tt_eMSp, tt_eMSp_Map,
-             as.integer(maxDepth), as.integer(verbose),
+             as.integer(maxDepth), as.logical(verbose),
              search = search,
              depthtotal = integer(1),
              depthA = integer(1))[c("search","depthtotal","depthA")]
@@ -356,11 +356,11 @@ twistflip <- function(init, maxDepth = 26, verbose = FALSE)
   search[seq(1, 13*31, 31)] <- c(1L, 0L, init, -1L, -1L)
   search[11*31 + 2] <- 1L
   
-  sout <- .C("twistflip1", 
+  sout <- .C(twistflip1, 
              mt_co, mt_eo, mt_e4b, mt_cp, mt_e4t, mt_eMSp, mt_eEp,
              pt_eEb, pt_cpXeEp, pt_eMSpXeEp,
              tt_eMSp, tt_eMSp_Map,
-             as.integer(maxDepth), as.integer(verbose),
+             as.integer(maxDepth), as.logical(verbose),
              search = search,
              depthtotal = integer(1),
              depthA = integer(1))[c("search","depthtotal","depthA")]

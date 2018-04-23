@@ -1,4 +1,4 @@
-  
+
 void kociemba1(int *mt_co, int *mt_eo, int *mt_e4b, 
               int *mt_cp, int *mt_e4t, int *mt_eMSp, int *mt_eEp,
               int *pt_eoXeEb, int *pt_coXeEb, 

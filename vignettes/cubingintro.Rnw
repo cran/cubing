@@ -458,7 +458,7 @@ for(i in 5000:5010)
 }
 \end{verbatim}
 
-The loop is over the id numbers on the cube solves website. The data is read with \texttt{read.cubesolve}, and the description is tested for the characters \texttt{3x3} by the function \texttt{grepl}. The will be true for 3x3, 3x3OH (one-handed) and 3x3BLD (blind) events. The description and id number are printed to the screen, and if the scramble and solution are both present, then the animation is performed. We use \texttt{move} to produce the scrambled cube because in blind events the scramble may contain a rotation or a wide move. The \texttt{warn = TRUE} option in \texttt{read.cubesolve} ensures that the loop continues if the id does not exist.
+The loop is over the id numbers on the cube solves website. The data is read with \texttt{read.cubesolve}, and the description is tested for the characters \texttt{3x3} by the function \texttt{grepl}. This will be true for 3x3, 3x3OH (one-handed) and 3x3BLD (blind) events. The description and id number are printed to the screen, and if the scramble and solution are both present, then the animation is performed. We use \texttt{move} to produce the scrambled cube because in blind events the scramble may contain a rotation or a wide move. The \texttt{warn = TRUE} option in \texttt{read.cubesolve} ensures that the loop continues if the id does not exist.
 
 \section{Rotations and Equivalence}
 \label{sect:roteq}

@@ -1,11 +1,11 @@
 Package: cubing
-Version: 1.0-4
-Date: 2018-04-14
+Version: 1.0-5
+Date: 2018-04-24
 Title: Rubik's Cube Solving
-Author: Alec Stephenson. 
+Author: Alec Stephenson.
 Maintainer: Alec Stephenson <alec_stephenson@hotmail.com>
-Depends: R (>= 2.10.0)
-Imports: rgl
+Depends: R (>= 3.0.0)
+Imports: grDevices, graphics, utils, stats, rgl
 Description: Functions for visualizing, animating, solving and 
         analyzing the Rubik's cube. Includes data structures for
 		solvable and unsolvable cubes, random moves and random 
@@ -15,6 +15,6 @@ Description: Functions for visualizing, animating, solving and
 		Kociemba solver.
 License: GPL-3
 NeedsCompilation: yes
-Packaged: 2018-04-14 09:12:22 UTC; ste6an
+Packaged: 2018-04-15 07:02:11 UTC; ste6an
 Repository: CRAN
-Date/Publication: 2018-04-14 09:26:11 UTC
+Date/Publication: 2018-04-23 12:29:32 UTC
